@@ -15,12 +15,12 @@ public class ECParserUnitTester {
 		// strings should match (syntactically correct) -- true
 		assertTrue(ecParser.hasMatch("main do @var = 2 end"));
 		assertTrue(ecParser.hasMatch("main do @var = 2 + 1 end"));
-		assertTrue(ecParser.hasMatch("main do @var = 2+ 12 end"));
+		assertTrue(ecParser.hasMatch("main do @var = 2 + 12 end"));
 		assertTrue(ecParser.hasMatch("main do @var = @vAr23a end"));
 		assertTrue(ecParser.hasMatch("main do @var = @ve2 - @vA end"));
-		assertTrue(ecParser.hasMatch("main do @var = @vAr/@ht end"));
-		assertTrue(ecParser.hasMatch("main do @var = @vA*@gf @br=1+@vd end"));
-		
+		assertTrue(ecParser.hasMatch("main do @var = @vAr / @ht end"));
+		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf @br = 1 + @vd end"));
+		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf 1 + @vd end"));
 		
 		// strings should not match (syntactically incorrect) -- false
 		assertFalse(ecParser.hasMatch("main d o @var = 2 end")); // must be do
