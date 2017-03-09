@@ -9,11 +9,23 @@ public class ECParserUnitTester {
 
 	@Test
 	public void test() {
+		boolean isTest = true;
+		ECParser ecParser = new ECParser(isTest);
+		
 		// strings should match (syntactically correct) -- true
-		assertTrue(new ECParser("main do @var = 2 end").hasMatched());
+		assertTrue(ecParser.hasMatch("main do @var = 2 end"));
+		assertTrue(ecParser.hasMatch("main do @var = 2 + 1 end"));
+		assertTrue(ecParser.hasMatch("main do @var = 2+ 12 end"));
+		assertTrue(ecParser.hasMatch("main do @var = @vAr23a end"));
+		assertTrue(ecParser.hasMatch("main do @var = @ve2 - @vA end"));
+		assertTrue(ecParser.hasMatch("main do @var = @vAr/@ht end"));
+		assertTrue(ecParser.hasMatch("main do @var = @vA*@gf @br=1+@vd end"));
+		
 		
 		// strings should not match (syntactically incorrect) -- false
-		assertFalse(new ECParser("main d o @var = 2 end").hasMatched());
+		assertFalse(ecParser.hasMatch("main d o @var = 2 end")); // must be do
+		assertFalse(ecParser.hasMatch("main do @var = 1 + 'as' end")); // strings are not allowed for arithmetic operations
+		
 	}
 
 }

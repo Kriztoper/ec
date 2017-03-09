@@ -12,11 +12,11 @@ public class ECParser {
 	private String func_call = "";
 	private String string = "'.*'";
 	private String constant = "-?" + number + "+(\\." + number + "+)?";
-	private String term = constant;//"(" + constant + "|" + string + ")";
+	private String word = "@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*";
+	private String term = "(" + constant + "|" + word + ")";//"(" + constant + "|" + string + ")";
 	private String hi_order_op = "(/|\\*|%)";
 	private String arith_op = "(\\+|-|" + hi_order_op + ")";
 	private String arithmetic = term + "\\s*" + arith_op + "\\s*" + term;
-	private String word = "@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*";
 	private String operation = "(" + func_call + "|" + arithmetic + ")";
 	private String conditional = "";
 	private String iteration = "";
@@ -30,8 +30,6 @@ public class ECParser {
 	private Pattern pattern;
 	private Matcher matcher;
 	
-	private String testString;
-	
 	private Pattern compile(String regex) {
 		return Pattern.compile(regex);
 	}
@@ -40,13 +38,12 @@ public class ECParser {
 		return pattern.matcher(stringPattern);
 	}
 	
-	public ECParser(String testString) {
-		this.testString = testString;
+	public ECParser(boolean isTest) {
 		pattern = compile(program);
-		matcher = match(this.testString);
 	}
-	
-	public boolean hasMatched() {
+
+	public boolean hasMatch(String testString) {
+		matcher = match(testString);
 		return matcher.find();
 	}
 	
