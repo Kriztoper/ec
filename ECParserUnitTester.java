@@ -21,6 +21,7 @@ public class ECParserUnitTester {
 		assertTrue(ecParser.hasMatch("main do @var = @vAr / @ht end"));
 		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf @br = 1 + @vd end"));
 		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf 1 + @vd end"));
+		assertTrue(ecParser.hasMatch("main do if @a and @b @var = @vA * @gf 1 + @vd end end"));
 		
 		// strings should not match (syntactically incorrect) -- false
 		assertFalse(ecParser.hasMatch("main d o @var = 2 end")); // must be do

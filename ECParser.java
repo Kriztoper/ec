@@ -6,32 +6,42 @@ import java.util.regex.Pattern;
 
 public class ECParser {
 	
-	private String lower_alpha = "[a-z]";
-	private String upper_alpha = "[A-Z]";
-	private String number = "[0-9]";
-	private String string = "'.*'";
-	private String constant = "-?" + number + "+(\\." + number + "+)?";
-	private String word = "@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*";
-	private String term = "(" + constant + "|" + word + ")";//"(" + constant + "|" + string + ")";
-	private String hi_order_op = "(/|\\*|%)";
-	private String arith_op = "(\\+|-|" + hi_order_op + ")";
+	private static String lower_alpha = "[a-z]";
+	private static String upper_alpha = "[A-Z]";
+	private static String number = "[0-9]";
+	private static String string = "'.*'";
+	private static String constant = "-?" + number + "+(\\." + number + "+)?";
+	private static String word = "@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*";
+	private static String term = "(" + constant + "|" + word + ")";//"(" + constant + "|" + string + ")";
+	private static String hi_order_op = "(/|\\*|%)";
+	private static String arith_op = "(\\+|-|" + hi_order_op + ")";
+	private static String arithmetic = term + "\\s+" + arith_op + "\\s+" + term;
+	private static String iteration = "";
+	private static String func_call = "";
+	private static String operation = "(" + func_call + "|" + arithmetic + ")";
+	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
+	private static String sentence = "((" + assignment + "|" + operation + ")\\s+)*";
 
-	private String iteration = "";
-	private String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
-	private String expression = "(not)?\\s+(" + condition + "|" + word + "|" + constant + "|" + string + ")";
-	private String condition = expression + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + expression;
-	private String conditional = "if\\s+" + condition + "\\s+" + paragraph + "\\s+end";
-	private String sentence = "((" + assignment + "|" + operation + ")\\s+)*";
-	private String stmt_block = "(" + conditional + "|" + iteration + ")";
-	private String func_call = "";
-	private String arithmetic = term + "\\s+" + arith_op + "\\s+" + term;
-	private String operation = "(" + func_call + "|" + arithmetic + ")";
-	private String paragraph = "(" + sentence + "|" + stmt_block + ")*";
-	private String main = "^main\\s+do\\s+" + paragraph + "end$";
-	private String program  = main;
+	private static String condition = getExpression() + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + getExpression();
+	private static String expression = "(not)?\\s*(" + condition + "|" + word + "|" + constant + "|" + string + ")";
+	
+	private static String conditional = "if\\s+" + condition + "\\s+" + getParagraph() + "\\s+end";
+	private static String stmt_block = "(" + conditional + "|" + iteration + ")";
+	private static String paragraph = "(" + sentence + "|" + stmt_block + ")*";
+	
+	private static String main = "^main\\s+do\\s+" + paragraph + "end$";
+	private static String program  = main;
 
 	private Pattern pattern;
 	private Matcher matcher;
+	
+	public static String getExpression() {
+		return expression;
+	}
+	
+	public static String getParagraph() {
+		return paragraph;
+	}
 	
 	private Pattern compile(String regex) {
 		return Pattern.compile(regex);
