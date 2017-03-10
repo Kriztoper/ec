@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.stream.events.Comment;
+
 public class ECParser {
 	
 	private static String lower_alpha = "[a-z]";
@@ -19,11 +21,12 @@ public class ECParser {
 	private static String print = "print\\s+(" + word + "|" + string + ")(\\s+\\+\\s+" + "(" + word + "|" + string + "))*";
 	private static String print_newline = "puts\\s+(" + word + "|" + string + ")(\\s+\\+\\s+" + "(" + word + "|" + string + "))*";
 	private static String scanner = "scan\\s+" + word;
+	private static String comment = "/\\*\\s+.*\\s+\\*/";
 	private static String iteration = "";
 	private static String func_call = "";
 	private static String operation = "(" + func_call + "|" + arithmetic + ")";
 	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
-	private static String sentence = "((" + assignment + "|" + operation + "|" + print + "|" + print_newline + "|" + scanner + ")\\s+)*";
+	private static String sentence = "((" + assignment + "|" + operation + "|" + print + "|" + print_newline + "|" + scanner + "|" + comment + ")\\s+)*";
 
 	private static String condition = getExpression() + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + getExpression();
 	private static String expression = "(not)?\\s*(" + condition + "|" + word + "|" + constant + "|" + string + ")";

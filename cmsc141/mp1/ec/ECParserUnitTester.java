@@ -22,6 +22,7 @@ public class ECParserUnitTester {
 		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf @br = 1 + @vd end"));
 		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf 1 + @vd end"));
 		//assertTrue(ecParser.hasMatch("main do if @a and @b @var = @vA * @gf 1 + @vd end end"));
+		assertTrue(ecParser.hasMatch("main do /* 482aha7343 /n jsdhf */ end"));
 		assertTrue(ecParser.hasMatch("main do print 'HELL' end"));
 		assertTrue(ecParser.hasMatch("main do print @var end"));
 		assertTrue(ecParser.hasMatch("main do print @var + 'is yeah.' + @var1 end"));
