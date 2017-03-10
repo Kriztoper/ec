@@ -16,11 +16,14 @@ public class ECParser {
 	private static String hi_order_op = "(/|\\*|%)";
 	private static String arith_op = "(\\+|-|" + hi_order_op + ")";
 	private static String arithmetic = term + "\\s+" + arith_op + "\\s+" + term;
+	private static String print = "print\\s+(" + word + "|" + string + ")(\\s+\\+\\s+" + "(" + word + "|" + string + "))*";
+	private static String print_newline = "puts\\s+(" + word + "|" + string + ")(\\s+\\+\\s+" + "(" + word + "|" + string + "))*";
+	private static String scanner = "scan\\s+" + word;
 	private static String iteration = "";
 	private static String func_call = "";
 	private static String operation = "(" + func_call + "|" + arithmetic + ")";
 	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
-	private static String sentence = "((" + assignment + "|" + operation + ")\\s+)*";
+	private static String sentence = "((" + assignment + "|" + operation + "|" + print + "|" + print_newline + "|" + scanner + ")\\s+)*";
 
 	private static String condition = getExpression() + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + getExpression();
 	private static String expression = "(not)?\\s*(" + condition + "|" + word + "|" + constant + "|" + string + ")";
