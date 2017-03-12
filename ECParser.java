@@ -11,7 +11,7 @@ public class ECParser {
 	private static String number = "[0-9]";
 	private static String string = "'.*'";
 	private static String constant = "-?" + number + "+(\\." + number + "+)?";
-	private static String word = "@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*";
+	private static String word = "(@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*)";
 	private static String term = "(" + constant + "|" + word + ")";//"(" + constant + "|" + string + ")";
 	private static String hi_order_op = "(/|\\*|%)";
 	private static String arith_op = "(\\+|-|" + hi_order_op + ")";
@@ -22,18 +22,28 @@ public class ECParser {
 	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
 	private static String sentence = "((" + assignment + "|" + operation + ")\\s+)*";
 
-	private static String condition = getExpression() + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + getExpression();
-	private static String expression = "(not)?\\s*(" + condition + "|" + word + "|" + constant + "|" + string + ")";
+	private static String expression = "(" + word + "|" + constant + "|" + string + ")";
+	private static String condition = "(not\\s+)?" + expression + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + expression;
 	
-	private static String conditional = "if\\s+" + condition + "\\s+" + getParagraph() + "\\s+end";
+	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+(" + sentence + ")*end\\s+)";
 	private static String stmt_block = "(" + conditional + "|" + iteration + ")";
-	private static String paragraph = "(" + sentence + "|" + stmt_block + ")*";
+	private static String paragraph = "((" + sentence + "|" + stmt_block + ")*)";
 	
-	private static String main = "^main\\s+do\\s+" + paragraph + "end$";
+	private static String main = "(^main\\s+do\\s+" + paragraph + "end$)";
 	private static String program  = main;
 
 	private Pattern pattern;
 	private Matcher matcher;
+	
+	public String getMatchedPattern(String testString) {
+		matcher = match(testString);
+		String matchedString = "oops";
+		while (matcher.find()) {
+			matchedString += matcher.group(1);
+		}
+		System.out.println("editedString = "+matchedString);
+		return matchedString;
+	}
 	
 	public static String getExpression() {
 		return expression;
@@ -52,6 +62,7 @@ public class ECParser {
 	}
 	
 	public ECParser(boolean isTest) {
+		initVariables();
 		pattern = compile(program);
 	}
 
@@ -60,9 +71,21 @@ public class ECParser {
 		return matcher.find();
 	}
 	
+	private void initVariables() {
+		/*conditional = "(if\\s+" + condition + "\\s+do\\s+" + 
+				"(" + sentence + "|" + stmt_block + ")*" + "end\\s+";
+		stmt_block = "(" + conditional + "|" + iteration + ")";
+		paragraph = "(" + sentence + "|" + stmt_block + ")*";
+		
+		main = "(^main\\s+do\\s+" + paragraph + "end$)";
+		cond = "(if\\s+@[a-z]\\s+(and|or|==|!=|<|>|<=|>=)\\s+@[a-z]\\s+do\\s+end\\s*)";
+		program  = main;*/
+	}
+	
 	public ECParser() {
 		Scanner scanner = new Scanner(System.in);
 		String input = "";
+		initVariables();
 		pattern = compile(program);
 		
 		System.out.println(pattern.pattern());
