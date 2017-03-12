@@ -29,7 +29,8 @@ public class ECParserUnitTester {
 		assertTrue(ecParser.hasMatch("main do puts 'HELL' end"));
 		assertTrue(ecParser.hasMatch("main do puts @var end"));
 		assertTrue(ecParser.hasMatch("main do puts @var + 'is yeah.' + @var1 end"));
-		assertTrue(ecParser.hasMatch("main do scan @var end"));		
+		assertTrue(ecParser.hasMatch("main do scan @var end"));
+		assertTrue(ecParser.hasMatch("main do for @var = 1; @var < 1; @var + 1 do end end"));
 		
 		// strings should not match (syntactically incorrect) -- false
 		assertFalse(ecParser.hasMatch("main d o @var = 2 end")); // must be do

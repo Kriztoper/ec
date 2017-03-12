@@ -12,25 +12,29 @@ public class ECParser {
 	private static String upper_alpha = "[A-Z]";
 	private static String number = "[0-9]";
 	private static String string = "'.*'";
+	
 	private static String constant = "-?" + number + "+(\\." + number + "+)?";
 	private static String word = "@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*";
 	private static String term = "(" + constant + "|" + word + ")";//"(" + constant + "|" + string + ")";
+	
 	private static String hi_order_op = "(/|\\*|%)";
 	private static String arith_op = "(\\+|-|" + hi_order_op + ")";
 	private static String arithmetic = term + "\\s+" + arith_op + "\\s+" + term;
+	
 	private static String print = "print\\s+(" + word + "|" + string + ")(\\s+\\+\\s+" + "(" + word + "|" + string + "))*";
 	private static String print_newline = "puts\\s+(" + word + "|" + string + ")(\\s+\\+\\s+" + "(" + word + "|" + string + "))*";
 	private static String scanner = "scan\\s+" + word;
 	private static String comment = "/\\*\\s+.*\\s+\\*/";
-	private static String iteration = "";
-	private static String func_call = "";
-	private static String operation = "(" + func_call + "|" + arithmetic + ")";
+	private static String operation = arithmetic;
 	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
+	
 	private static String sentence = "((" + assignment + "|" + operation + "|" + print + "|" + print_newline + "|" + scanner + "|" + comment + ")\\s+)*";
-
 	private static String condition = getExpression() + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + getExpression();
 	private static String expression = "(not)?\\s*(" + condition + "|" + word + "|" + constant + "|" + string + ")";
 	
+	private static String iteration = "((for\\s+" + assignment + "\\s*;\\s+" + condition + "\\s*;\\s+" + operation + "\\s+do\\s+" + getParagraph() + "end\\s+)|("
+			+  "while\\s+" + condition +  "\\s+do\\s+" + getParagraph() +  "\\s+end\\s+)|("
+			+  "do\\s+" + getParagraph() +  "\\s+while\\s+" + condition +  "\\s+end\\s+))*";
 	private static String conditional = "if\\s+" + condition + "\\s+" + getParagraph() + "\\s+end";
 	private static String stmt_block = "(" + conditional + "|" + iteration + ")";
 	private static String paragraph = "(" + sentence + "|" + stmt_block + ")*";
