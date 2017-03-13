@@ -30,7 +30,10 @@ public class ECParserUnitTester {
 		assertTrue(ecParser.hasMatch("main do puts @var end"));
 		assertTrue(ecParser.hasMatch("main do puts @var + 'is yeah.' + @var1 end"));
 		assertTrue(ecParser.hasMatch("main do scan @var end"));
-//		assertTrue(ecParser.hasMatch("main do for @var = 1; @var < 1; @var + 1 do end end"));
+		assertTrue(ecParser.hasMatch("main do for @var = 1; @var < 1; @var + 1 do end end"));
+		assertTrue(ecParser.hasMatch("main do while @var == 1 do @var + 1 end end"));
+		assertTrue(ecParser.hasMatch("main do while @var == 1 do @var / 1 @var + 1 end end"));
+		assertTrue(ecParser.hasMatch("main do do @var * 1 @var + 1 while @var == 1 end end"));
 		assertTrue(ecParser.hasMatch("main do if @a <= @b do end end"));
 		assertTrue(ecParser.hasMatch("main do if '@a' <= '@b' do end end"));
 		assertTrue(ecParser.hasMatch("main do if -12.3 <= 40.1 do end end"));
@@ -49,12 +52,13 @@ public class ECParserUnitTester {
 				+ "/* this is a comment */ end"));
 		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do /* awre2r;|@e */ @g = 1 + @b else if @d != @b do @ge = 23 else do /* d2bgs */ 12 + 3 @d = 12 + 2 end @a = 2 23 / 2 "
 				+ "/* this is a comment */ end"));
+		assertTrue(ecParser.hasMatch("main do do @var * 1 @var + 1 /* Hi po */ while @var == 1 end end"));
 		
 		// strings should not match (syntactically incorrect) -- false
 		assertFalse(ecParser.hasMatch("main d o @var = 2 end")); // must be do
 		assertFalse(ecParser.hasMatch("main do @var = 1 + 'as' end")); // strings are not allowed for arithmetic operations
 		assertFalse(ecParser.hasMatch("main /* as */ do if not 12 < @fd do @g = 1 + @b else if @d != @b do @ge = 23 else do 12 + 3 @d = 12 + 2 end @a = 2 23 / 2 "
-				+ "/* this is a comment */end"));
+				+ "/* this is a comment */end")); // there should be atleast 1 space before end after comment /*  */
 		
 	}
 
