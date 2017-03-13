@@ -25,7 +25,8 @@ public class ECParser {
 	private static String expression = "(" + word + "|" + constant + "|" + string + ")";
 	private static String condition = "(not\\s+)?" + expression + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + expression;
 	
-	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+(" + sentence + ")*end\\s+)";
+	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+(" + sentence + ")*"
+			+ "(else if\\s+" + condition + "\\s+do\\s+("+ sentence +")*)*(else\\s+do\\s+" + sentence + ")?end\\s+)";
 	private static String stmt_block = "(" + conditional + "|" + iteration + ")";
 	private static String paragraph = "((" + sentence + "|" + stmt_block + ")*)";
 	

@@ -30,6 +30,11 @@ public class ECParserUnitTester {
 		assertTrue(ecParser.hasMatch("main do if not @ds and 40.1 do @we = '12' end 1 + 2 end"));
 		assertTrue(ecParser.hasMatch("main do if not '2' >= 40.1 do @g = 1 + @b @ge = 23 end @s2 + @f end"));
 		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do @g = 1 + @b @ge = 23 end @a = 2 end"));
+		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do @g = 1 + @b else if @d != @b do @ge = 23 end @a = 2 end"));
+		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do @g = 1 + @b else if @d != @b do @ge = 23 end @a = 2 end"));
+		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do @g = 1 + @b else if @d != @b do @ge = 23 else do 12 + 3 end @a = 2 end"));
+		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do @g = 1 + @b else if @d != @b do @ge = 23 else do 12 + 3 @d = 12 + 2 end @a = 2 end"));
+		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do @g = 1 + @b else if @d != @b do @ge = 23 else do 12 + 3 @d = 12 + 2 end @a = 2 23 / 2 end"));
 		
 		// strings should not match (syntactically incorrect) -- false
 		assertFalse(ecParser.hasMatch("main d o @var = 2 end")); // must be do
