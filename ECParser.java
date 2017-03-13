@@ -24,7 +24,7 @@ public class ECParser {
 	private static String print_newline = "(puts\\s+(" + word + "|" + string + ")(\\s+\\+\\s+" + "(" + word + "|" + string + "))*)";
 	private static String scanner = "scan\\s+" + word;
 	private static String operation = arithmetic;
-	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
+	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")";
 	private static String sentence = "((" + assignment + "|" + operation + "|" + comment + "|" +
 			print + "|" + print_newline + "|" + scanner + ")\\s+)*";
 
