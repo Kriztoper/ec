@@ -34,7 +34,9 @@ public class ECParser {
 	private static String iteration = "((for\\s+" + assignment + "\\s*;\\s+" + condition + "\\s*;\\s+" + operation + "\\s+do\\s+" + getParagraph() + "end\\s+)|("
 			+  "while\\s+" + condition +  "\\s+do\\s+" + getParagraph() +  "\\s+end\\s+)|("
 			+  "do\\s+" + getParagraph() +  "\\s+while\\s+" + condition +  "\\s+end\\s+))*";	
-	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+(" + sentence + ")*end\\s+)";
+	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+(" + sentence + ")*"
+			+ "(else if\\s+" + condition + "\\s+do\\s+("+ sentence +")*)*(else\\s+do\\s+" + sentence + ")?end\\s+)";
+	
 	private static String stmt_block = "(" + conditional + "|" + iteration + ")";
 	private static String paragraph = "((" + sentence + "|" + stmt_block + ")*)";
 	
