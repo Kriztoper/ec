@@ -5,7 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ECParser {
-	
+
+	private static String comment = "(\\s*/\\*\\s+(.)*\\s+\\*/\\s*)*";
 	private static String lower_alpha = "[a-z]";
 	private static String upper_alpha = "[A-Z]";
 	private static String number = "[0-9]";
@@ -20,15 +21,15 @@ public class ECParser {
 	private static String func_call = "";
 	private static String operation = "(" + func_call + "|" + arithmetic + ")";
 	private static String assignment = word + "\\s+=\\s+(" + operation + "|" + word + "|" + constant + "|" + string + ")*";
-	private static String sentence = "((" + assignment + "|" + operation + ")\\s+)*";
+	private static String sentence = "((" + assignment + "|" + operation + "|" + comment + ")\\s+)*";
 
 	private static String expression = "(" + word + "|" + constant + "|" + string + ")";
 	private static String condition = "(not\\s+)?" + expression + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + expression;
 	
 	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+(" + sentence + ")*"
 			+ "(else if\\s+" + condition + "\\s+do\\s+("+ sentence +")*)*(else\\s+do\\s+" + sentence + ")?end\\s+)";
-	private static String stmt_block = "(" + conditional + "|" + iteration + ")";
-	private static String paragraph = "((" + sentence + "|" + stmt_block + ")*)";
+	private static String stmt_block = "(" + conditional + "|" + iteration + "|" + comment + ")";
+	private static String paragraph = "((" + sentence + "|" + stmt_block + "|" + comment + ")*)";
 	
 	private static String main = "(^main\\s+do\\s+" + paragraph + "end$)";
 	private static String program  = main;
@@ -46,14 +47,6 @@ public class ECParser {
 		return matchedString;
 	}
 	
-	public static String getExpression() {
-		return expression;
-	}
-	
-	public static String getParagraph() {
-		return paragraph;
-	}
-	
 	private Pattern compile(String regex) {
 		return Pattern.compile(regex);
 	}
@@ -63,7 +56,7 @@ public class ECParser {
 	}
 	
 	public ECParser(boolean isTest) {
-		initVariables();
+		//initVariables();
 		pattern = compile(program);
 	}
 
@@ -86,7 +79,7 @@ public class ECParser {
 	public ECParser() {
 		Scanner scanner = new Scanner(System.in);
 		String input = "";
-		initVariables();
+		//initVariables();
 		pattern = compile(program);
 		
 		System.out.println(pattern.pattern());
