@@ -19,7 +19,7 @@ public class ECParserUnitTester {
 		assertTrue(ecParser.hasMatch("main do @var = @vAr23a end"));
 		assertTrue(ecParser.hasMatch("main do @var = @ve2 - @vA end"));
 		assertTrue(ecParser.hasMatch("main do @var = @vAr / @ht end"));
-		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf @br = 1 + @vd end"));
+		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf \n@br = 1 + @vd end"));
 		assertTrue(ecParser.hasMatch("main do @var = @vA * @gf 1 + @vd end"));
 		assertTrue(ecParser.hasMatch("main do if @a and @b do @var = @vA * @gf 1 + @vd end end"));
 		assertTrue(ecParser.hasMatch("main do /* 482aha7343 /n jsdhf */ end"));
@@ -52,6 +52,7 @@ public class ECParserUnitTester {
 				+ "/* this is a comment */ end"));
 		assertTrue(ecParser.hasMatch("main do if not 12 < @fd do /* awre2r;|@e */ @g = 1 + @b else if @d != @b do @ge = 23 else do /* d2bgs */ 12 + 3 @d = 12 + 2 end @a = 2 23 / 2 "
 				+ "/* this is a comment */ end"));
+		assertTrue(ecParser.hasMatch("main do do @var * 1 @var + 1 /* Hi po */ while @var == 1 end end"));
 		assertTrue(ecParser.hasMatch("main do do @var * 1 @var + 1 /* Hi po */ while @var == 1 end end"));
 		
 		// strings should not match (syntactically incorrect) -- false
