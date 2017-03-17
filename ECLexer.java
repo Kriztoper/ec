@@ -1,6 +1,6 @@
 package cmsc141.mp1.ec;
 
-import java.util.*;
+import java.util.Hashtable;
 
 public class ECLexer {
 	private Hashtable<String, String> variables = new Hashtable();
@@ -28,7 +28,9 @@ public class ECLexer {
 		for(int i=0; i<words.length-4; i++) {
 			if(words[i+3].equals("+")){
 				if(variables.get(words[i]).charAt(0)=='\'') {
-					variables.put(words[i],  (variables.get(words[i])+words[i+4]).replace("''", ""));
+					variables.put(words[i], 
+						(variables.get(
+							words[i])+words[i+4]).replace("''", ""));
 				}
 			}
 		}
@@ -36,12 +38,16 @@ public class ECLexer {
 	
 	public void printVariable(String[] words) {
 		for(int i=0; i<words.length-1; i++) {
-			if(words[i].contains("print") && words[i+1].charAt(0)=='@') {
+			if(words[i].contains("print") && 
+					words[i+1].charAt(0)=='@') {
 				System.out.println("Print Identified: ");
-				System.out.println(variables.get(words[i+1]).replace("'", ""));
-			} else if (words[i].contains("print") && words[i+1].charAt(0)=='\'') {
+				System.out.println(variables.get(
+					words[i+1]).replace("'", ""));
+			} else if (words[i].contains("print") && 
+					words[i+1].charAt(0)=='\'') {
 				System.out.println("Print Identified: ");
-				System.out.println(words[i+1].replace("'", ""));
+				System.out.println(
+					words[i+1].replace("'", ""));
 			}
 		}
 	}
