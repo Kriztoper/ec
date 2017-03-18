@@ -1,6 +1,5 @@
 package cmsc141.mp1.ec;
 
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,9 +47,9 @@ public class ECSyntaxChecker {
 	private Matcher matcher;
 	
 	public String getMatchedPattern(String testString) {
-		matcher = match(testString);
+		//matcher = match(testString);
 		String matchedString = "oops";
-		while (matcher.find()) {
+		while (match(testString)) {
 			matchedString += matcher.group(1);
 		}
 		System.out.println("editedString = "+matchedString);
@@ -61,8 +60,8 @@ public class ECSyntaxChecker {
 		return Pattern.compile(regex);
 	}
 	
-	public Matcher match(String stringPattern) {
-		return pattern.matcher(stringPattern);
+	public boolean match(String stringPattern) {
+		return pattern.matcher(stringPattern).find();
 	}
 	
 	public ECSyntaxChecker(boolean isTest) {
@@ -71,8 +70,7 @@ public class ECSyntaxChecker {
 	}
 
 	public boolean hasMatch(String testString) {
-		matcher = match(testString);
-		return matcher.find();
+		return match(testString);
 	}
 	
 	private void initVariables() {
@@ -87,8 +85,11 @@ public class ECSyntaxChecker {
 	}
 	
 	public ECSyntaxChecker() {
-		ECInterpreter ecInterpreter = new ECInterpreter();
-		Scanner scanner = new Scanner(System.in);
+		//ECInterpreter ecInterpreter = new ECInterpreter();
+		//Scanner scanner = new Scanner(System.in);
+	    pattern = compile(program);
+
+/*		Scanner scanner = new Scanner(System.in);
 		String input = "";
 		//initVariables();
 		pattern = compile(program);
@@ -104,10 +105,10 @@ public class ECSyntaxChecker {
 				System.out.println("yey!");
 			else
 				System.out.println("boo!");
-		}
+		}*/
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new ECSyntaxChecker();
-	}
+	}*/
 }
