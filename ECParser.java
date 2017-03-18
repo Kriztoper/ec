@@ -48,9 +48,9 @@ public class ECParser {
 	private Matcher matcher;
 	
 	public String getMatchedPattern(String testString) {
-		matcher = match(testString);
+		//matcher = match(testString);
 		String matchedString = "oops";
-		while (matcher.find()) {
+		while (match(testString)) {
 			matchedString += matcher.group(1);
 		}
 		System.out.println("editedString = "+matchedString);
@@ -61,8 +61,8 @@ public class ECParser {
 		return Pattern.compile(regex);
 	}
 	
-	public Matcher match(String stringPattern) {
-		return pattern.matcher(stringPattern);
+	public boolean match(String stringPattern) {
+		return pattern.matcher(stringPattern).find();
 	}
 	
 	public ECParser(boolean isTest) {
@@ -71,8 +71,7 @@ public class ECParser {
 	}
 
 	public boolean hasMatch(String testString) {
-		matcher = match(testString);
-		return matcher.find();
+		return match(testString);
 	}
 	
 	private void initVariables() {
@@ -87,7 +86,10 @@ public class ECParser {
 	}
 	
 	public ECParser() {
-		Scanner scanner = new Scanner(System.in);
+
+	    pattern = compile(program);
+
+/*		Scanner scanner = new Scanner(System.in);
 		String input = "";
 		//initVariables();
 		pattern = compile(program);
@@ -102,10 +104,10 @@ public class ECParser {
 				System.out.println("yey!");
 			else
 				System.out.println("boo!");
-		}
+		}*/
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new ECParser();
-	}
+	}*/
 }
