@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ECParser {
+public class ECSyntaxChecker {
 
 	private static String comment = "(\\s*/\\*\\s+(.)*\\s+\\*/\\s*)*";
 	private static String lower_alpha = "[a-z]";
@@ -65,7 +65,7 @@ public class ECParser {
 		return pattern.matcher(stringPattern);
 	}
 	
-	public ECParser(boolean isTest) {
+	public ECSyntaxChecker(boolean isTest) {
 		//initVariables();
 		pattern = compile(program);
 	}
@@ -86,7 +86,8 @@ public class ECParser {
 		program  = main;*/
 	}
 	
-	public ECParser() {
+	public ECSyntaxChecker() {
+		ECInterpreter ecInterpreter = new ECInterpreter();
 		Scanner scanner = new Scanner(System.in);
 		String input = "";
 		//initVariables();
@@ -96,6 +97,7 @@ public class ECParser {
 		while (!input.equals("e")) {
 			System.out.println("Enter a sentence (\"e to exit\"): ");
 			input = scanner.nextLine();
+			ecInterpreter.interpret(input);
 			matcher = match(input);
 			
 			if (matcher.find() == true)
@@ -106,6 +108,6 @@ public class ECParser {
 	}
 	
 	public static void main(String[] args) {
-		new ECParser();
+		new ECSyntaxChecker();
 	}
 }

@@ -1,6 +1,7 @@
 package cmsc141.mp1.ec;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -9,7 +10,7 @@ public class ECParserUnitTester {
 	@Test
 	public void test() {
 		boolean isTest = true;
-		ECParser ecParser = new ECParser(isTest);
+		ECSyntaxChecker ecParser = new ECSyntaxChecker(isTest);
 		
 		// strings should match (syntactically correct) -- true
 		assertTrue(ecParser.hasMatch("main do @var = 2 end"));
@@ -59,7 +60,9 @@ public class ECParserUnitTester {
 		assertFalse(ecParser.hasMatch("main do @var = 1 + 'as' end")); // strings are not allowed for arithmetic operations
 		assertFalse(ecParser.hasMatch("main /* as */ do if not 12 < @fd do @g = 1 + @b else if @d != @b do @ge = 23 else do 12 + 3 @d = 12 + 2 end @a = 2 23 / 2 "
 				+ "/* this is a comment */end")); // there should be atleast 1 space before end after comment /*  */
-		
+		assertFalse(ecParser.hasMatch("main do /* sd * / end")); // closing commenet tag should be */
+		assertFalse(ecParser.hasMatch(" main do /* sd * / end")); // no spaces before main
+		assertFalse(ecParser.hasMatch("main do /* sd * / end ")); // no spaces after end of program code or token end of main
 	}
 
 }
