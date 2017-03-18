@@ -1,0 +1,74 @@
+package cmsc141.mp1.ec;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+public class ECView {
+    
+    private ECFrame frame;
+    
+    private JPanel buttonsPanel, textPanel, resultsPanel;
+
+    private JButton runButton, newButton;
+    private JTextArea textArea, resArea;
+    
+    public ECView() {
+        frame = new ECFrame();
+        
+        initComponents();
+    }
+    
+    private void initComponents() {
+        buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new FlowLayout());
+
+        textPanel = new JPanel();
+        textPanel.setLayout(new FlowLayout());
+        
+        resultsPanel = new JPanel();
+        resultsPanel.setSize(frame.getWidth()/3, frame.getHeight()/4);
+        resultsPanel.setBackground(Color.LIGHT_GRAY);
+        
+        textArea = new JTextArea(45, 60);
+        resArea = new JTextArea(45, 50);
+        resArea.setText("");
+        resArea.setEditable(false);
+        runButton = new JButton("Run");
+        newButton = new JButton("New");
+
+        buttonsPanel.add(runButton);
+        buttonsPanel.add(newButton);
+        textPanel.add(new JScrollPane(textArea));
+        textPanel.add(resArea);
+        
+        frame.add(buttonsPanel, BorderLayout.NORTH);
+        frame.add(textPanel, BorderLayout.CENTER);
+        //frame.add(resultsPanel, BorderLayout.CENTER);
+    }
+
+    public JButton getNewButton() {
+        return newButton;
+    }
+    
+    public JButton getRunButton() {
+        return runButton;
+    }
+    
+    public JTextArea getTextArea() {
+        return textArea;
+    }
+
+    public JTextArea getResArea() {
+        return resArea;
+    }
+    
+    public ECFrame getFrame() {
+        return frame;
+    }
+}
