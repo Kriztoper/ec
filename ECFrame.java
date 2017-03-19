@@ -1,8 +1,8 @@
 package cmsc141.mp1.ec;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class ECFrame extends JFrame {
 
@@ -10,6 +10,7 @@ public class ECFrame extends JFrame {
 		setTitle("EC");
 		setLayout(new BorderLayout());
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 }

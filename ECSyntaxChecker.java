@@ -88,7 +88,7 @@ public class ECSyntaxChecker {
 		//ECInterpreter ecInterpreter = new ECInterpreter();
 		//Scanner scanner = new Scanner(System.in);
 
-	    pattern = compile(program);
+		pattern = compile(program);
 
 /*		Scanner scanner = new Scanner(System.in);
 		String input = "";
