@@ -7,12 +7,12 @@ public class ECController {
 
     private ECView view;
     
-    private ECParser parser;
+    private ECSyntaxChecker ecSyntaxChecker;
     
     public ECController(ECView view) {
         this.view = view;
         
-        parser = new ECParser();
+        ecSyntaxChecker = new ECSyntaxChecker();
         
         addListeners();
     }
@@ -23,12 +23,15 @@ public class ECController {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-               String input = view.getTextArea().getText();
+            	ECInterpreter ecInterpreter = new ECInterpreter();
+            	String input = view.getTextArea().getText();
 
-               if (parser.hasMatch(input))
+               if (ecSyntaxChecker.match(input)) {
+            	   ecInterpreter.interpret(input);
                    view.getResArea().setText("YEY");
-               else
+               } else {
                    view.getResArea().setText("BOO");
+               }
             }
         });
         
