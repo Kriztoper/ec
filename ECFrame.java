@@ -5,11 +5,13 @@ import java.awt.*;
 import javax.swing.*;
 
 public class ECFrame extends JFrame {
+    
 
 	public ECFrame() {
 		setTitle("EC");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setSize(Constants.WIDTH, Constants.HEIGHT);
 	}
 	
 }

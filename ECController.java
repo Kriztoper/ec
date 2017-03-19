@@ -7,12 +7,12 @@ public class ECController {
 
     private ECView view;
     
-    private ECParser parser;
+    private ECSyntaxChecker checker;
     
     public ECController(ECView view) {
         this.view = view;
         
-        parser = new ECParser();
+        checker = new ECSyntaxChecker();
         
         addListeners();
     }
@@ -25,7 +25,7 @@ public class ECController {
             public void actionPerformed(ActionEvent e) {
                String input = view.getTextArea().getText();
 
-               if (parser.hasMatch(input))
+               if (checker.hasMatch(input))
                    view.getResArea().setText("YEY");
                else
                    view.getResArea().setText("BOO");
