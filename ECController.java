@@ -26,7 +26,7 @@ public class ECController {
             	ECInterpreter ecInterpreter = new ECInterpreter();
             	String input = view.getTextArea().getText();
 
-               if (checker.hasMatch(input))
+               if (checker.hasMatch(input)) {
                    view.getResArea().setText("YEY");
                } else {
                    view.getResArea().setText("BOO");
