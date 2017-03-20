@@ -23,12 +23,14 @@ public class ECController {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-               String input = view.getTextArea().getText();
+            	ECInterpreter ecInterpreter = new ECInterpreter();
+            	String input = view.getTextArea().getText();
 
                if (checker.hasMatch(input))
                    view.getResArea().setText("YEY");
-               else
+               } else {
                    view.getResArea().setText("BOO");
+               }
             }
         });
         

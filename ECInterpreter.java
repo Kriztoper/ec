@@ -23,30 +23,48 @@ public class ECInterpreter {
 		boolean hasStartCommentTag = false;
 		boolean hasStartStringTag = false;
 		
+//		System.out.println("Program code:\n" + program);
+		
 		for (int i = 0; i < program.length(); i++) {
-			if (Character.isWhitespace(program.charAt(i)) &&
-					!entity.equals("") && !hasStartCommentTag) {
+			char currentChar = program.charAt(i);
+//			System.out.println("current char = " + currentChar + 
+//					", isComment = " + hasStartCommentTag + ", " +
+//					"isString = " + hasStartStringTag);
+			if (Character.isWhitespace(currentChar) &&
+					!entity.equals("") && !hasStartCommentTag &&
+					!hasStartStringTag) {
+//				System.out.println(currentChar + " is not added");
 				words.add(entity);
 				entity = "";
-			} else if (program.charAt(i) == '\'' && 
+			} else if (Character.isWhitespace(currentChar) &&
+					!entity.equals("") && !hasStartCommentTag &&
+					hasStartStringTag) {
+//				System.out.println(currentChar + " is added to entity");
+				entity += currentChar + "";
+			} else if (currentChar == '\'' && 
 					!hasStartStringTag && !hasStartCommentTag) {
+//				System.out.println(currentChar + " is encountered");
+				entity += currentChar + "";
 				hasStartStringTag = true;
-			} else if (program.charAt(i) == '\'' && 
+			} else if (currentChar == '\'' && 
 					hasStartStringTag && !hasStartCommentTag) {
+//				System.out.println(currentChar + " is encountered");
+				entity += currentChar + "";
 				hasStartStringTag = false;
-			} else if (program.charAt(i) == '/' && 
+			} else if (currentChar == '/' && 
 					program.charAt(i+1) == '*' && 
 					!hasStartCommentTag && !hasStartStringTag) {
 				hasStartCommentTag = true;
 				i++;
-			} else if (program.charAt(i) == '*' && 
+			} else if (currentChar == '*' && 
 					program.charAt(i+1) == '/' &&
 					hasStartCommentTag && !hasStartStringTag) {
 				hasStartCommentTag = false;
 				i++;
-			} else if (!Character.isWhitespace(program.charAt(i)) &&
+			} else if (!Character.isWhitespace(currentChar) &&
 					!hasStartCommentTag) {
-				entity += program.charAt(i) + "";
+//				System.out.println(currentChar + " is added to entity");
+				entity += currentChar + "";
 			}
 		}
 		words.remove(0);

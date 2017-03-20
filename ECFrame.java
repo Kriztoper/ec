@@ -1,8 +1,8 @@
 package cmsc141.mp1.ec;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class ECFrame extends JFrame {
     
