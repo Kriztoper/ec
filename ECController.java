@@ -7,12 +7,12 @@ public class ECController {
 
     private ECView view;
     
-    private ECSyntaxChecker checker;
+    private ECSyntaxChecker ecSyntaxChecker;
     
     public ECController(ECView view) {
         this.view = view;
         
-        checker = new ECSyntaxChecker();
+        ecSyntaxChecker = new ECSyntaxChecker();
         
         addListeners();
     }
@@ -26,7 +26,7 @@ public class ECController {
             	ECInterpreter ecInterpreter = new ECInterpreter();
             	String input = view.getTextArea().getText();
 
-               if (checker.hasMatch(input)) {
+               if (ecSyntaxChecker.hasMatch(input)) {
                    view.getResArea().setText("YEY");
                } else {
                    view.getResArea().setText("BOO");
