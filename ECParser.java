@@ -1,23 +1,14 @@
 package cmsc141.mp1.ec;
 
-import java.util.Hashtable;
+import java.util.ArrayList;
 
-public class ECInterpreter {
-	private Hashtable<String, String> variables = new Hashtable();
-	
-	public ECInterpreter() {
-	
+public class ECParser {
+
+	public ECParser() {
+		
 	}
 	
-	public void interpret(String program) {
-		ECParser ecParser = new ECParser();
-		String[] lexemes = ecParser.tokenize(program);
-//		String[] words = program.split(" ");
-		findVariables(lexemes);
-		printVariable(lexemes);
-	}
-	
-/*	public String[] tokenize(String program) {
+	public String[] tokenize(String program) {
 		ArrayList<String> lexemes = new ArrayList<String>();
 		String entity = "";
 		boolean hasStartCommentTag = false;
@@ -75,45 +66,5 @@ public class ECInterpreter {
 		String[] lexemesArr = lexemes.toArray(new String[lexemes.size()]);
 
 		return lexemesArr;
-	}*/
-	
-	public void findVariables(String[] lexemes) {
-		for(int i = 0; i < lexemes.length - 2; i++) {
-			if(lexemes[i].contains("@") && 
-					lexemes[i+1].equals("=")) {
-				System.out.println(lexemes[i] + lexemes[i+2]);
-				addVariables(lexemes[i], lexemes[i+2]);
-			}
-		}
-		
-		for(int i = 0; i < lexemes.length - 4; i++) {
-			if(lexemes[i + 3].equals("+")){
-				if(variables.get(lexemes[i]).charAt(0) == '\'') {
-					variables.put(lexemes[i], 
-						(variables.get(
-							lexemes[i])+lexemes[i+4]).replace("''", ""));
-				}
-			}
-		}
-	}
-	
-	public void printVariable(String[] lexemes) {
-		for(int i=0; i<lexemes.length-1; i++) {
-			if(lexemes[i].contains("print") && 
-					lexemes[i+1].charAt(0)=='@') {
-				System.out.println("Print Identified: ");
-				System.out.println(variables.get(
-					lexemes[i+1]).replace("'", ""));
-			} else if (lexemes[i].contains("print") && 
-					lexemes[i+1].charAt(0)=='\'') {
-				System.out.println("Print Identified: ");
-				System.out.println(
-					lexemes[i+1].replace("'", ""));
-			}
-		}
-	}
-	
-	public void addVariables(String key, String value) {
-		variables.put(key, value);
 	}
 }
