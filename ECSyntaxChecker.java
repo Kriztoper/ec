@@ -29,12 +29,19 @@ public class ECSyntaxChecker {
 
 	private static String expression = "(" + word + "|" + constant + "|" + string + ")";
 	private static String condition = "(not\\s+)?" + expression + "\\s+(and|or|==|!=|<|>|<=|>=)\\s+" + expression;
-	private static String iteration = "((for\\s+" + assignment + "\\s*;\\s+" + condition + "\\s*;\\s+" + operation + 
-			"\\s+do\\s+" + sentence + "end\\s+)|(" + 
+	private static String inner_iteration = "((for\\s+" + assignment + "\\s*;\\s+" + condition + "\\s*;\\s+(" + operation + 
+			"|" + assignment + ")*\\s+do\\s+" + sentence + "end\\s+)|(" + 
 			"while\\s+" + condition +  "\\s+do\\s+" + sentence +  "end\\s+)|(" + 
 			"do\\s+" + sentence +  "while\\s+" + condition +  "\\s+end\\s+))*";	
-	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+" + sentence +  
+	private static String inner_conditional = "(if\\s+" + condition + "\\s+do\\s+" + sentence +  
 			"(else if\\s+" + condition + "\\s+do\\s+"+ sentence +")*(else\\s+do\\s+" + sentence + ")?end\\s+)";
+	private static String iteration = "((for\\s+" + assignment + "\\s*;\\s+" + condition + "\\s*;\\s+(" + operation + 
+			"|" + assignment + ")*\\s+do\\s+(" + sentence + "|" + inner_iteration + "|" + inner_conditional + ")*end\\s+)|(" + 
+			"while\\s+" + condition +  "\\s+do\\s+(" + sentence + "|" + inner_iteration + "|" + inner_conditional + ")*end\\s+)|(" + 
+			"do\\s+(" + sentence + "|" + inner_iteration + "|" + inner_conditional + ")*while\\s+" + condition +  "\\s+end\\s+))*";	
+	private static String conditional = "(if\\s+" + condition + "\\s+do\\s+(" + sentence + "|" + inner_iteration + "|" + inner_conditional + 
+			")*(else if\\s+" + condition + "\\s+do\\s+(" + sentence + "|" + inner_iteration + "|" + inner_conditional + ")*)*"
+					+ "(else\\s+do\\s+(" + sentence + "|" + inner_iteration + "|" + inner_conditional + ")*)?end\\s+)";
 	private static String stmt_block = "(" + conditional + "|" + iteration + "|" + comment + ")";
 	private static String paragraph = "((" + sentence + "|" + stmt_block + "|" + comment + ")*)";
 	//private static String stmt_block = "(" + conditional + "|" + iteration + ")";

@@ -11,14 +11,14 @@ public class ECInterpreter {
 	}
 	
 	public void interpret(String program) {
-		String[] words = tokenize(program);
+		String[] lexemes = tokenize(program);
 //		String[] words = program.split(" ");
-		findVariables(words);
-		printVariable(words);
+		findVariables(lexemes);
+		printVariable(lexemes);
 	}
 	
 	public String[] tokenize(String program) {
-		ArrayList<String> words = new ArrayList<String>();
+		ArrayList<String> lexemes = new ArrayList<String>();
 		String entity = "";
 		boolean hasStartCommentTag = false;
 		boolean hasStartStringTag = false;
@@ -34,7 +34,7 @@ public class ECInterpreter {
 					!entity.equals("") && !hasStartCommentTag &&
 					!hasStartStringTag) {
 //				System.out.println(currentChar + " is not added");
-				words.add(entity);
+				lexemes.add(entity);
 				entity = "";
 			} else if (Character.isWhitespace(currentChar) &&
 					!entity.equals("") && !hasStartCommentTag &&
@@ -67,48 +67,48 @@ public class ECInterpreter {
 				entity += currentChar + "";
 			}
 		}
-		words.remove(0);
-		words.remove(0);
+		lexemes.remove(0);
+		lexemes.remove(0);
 		
-		System.out.println("Tokenized lexemes\n" + words);
+		System.out.println("Tokenized lexemes\n" + lexemes);
 		
-		String[] wordsArr = words.toArray(new String[words.size()]);
+		String[] lexemesArr = lexemes.toArray(new String[lexemes.size()]);
 
-		return wordsArr;
+		return lexemesArr;
 	}
 	
-	public void findVariables(String[] words) {
-		for(int i = 0; i < words.length - 2; i++) {
-			if(words[i].contains("@") && 
-					words[i+1].equals("=")) {
-				System.out.println(words[i] + words[i+2]);
-				addVariables(words[i], words[i+2]);
+	public void findVariables(String[] lexemes) {
+		for(int i = 0; i < lexemes.length - 2; i++) {
+			if(lexemes[i].contains("@") && 
+					lexemes[i+1].equals("=")) {
+				System.out.println(lexemes[i] + lexemes[i+2]);
+				addVariables(lexemes[i], lexemes[i+2]);
 			}
 		}
 		
-		for(int i = 0; i < words.length - 4; i++) {
-			if(words[i + 3].equals("+")){
-				if(variables.get(words[i]).charAt(0) == '\'') {
-					variables.put(words[i], 
+		for(int i = 0; i < lexemes.length - 4; i++) {
+			if(lexemes[i + 3].equals("+")){
+				if(variables.get(lexemes[i]).charAt(0) == '\'') {
+					variables.put(lexemes[i], 
 						(variables.get(
-							words[i])+words[i+4]).replace("''", ""));
+							lexemes[i])+lexemes[i+4]).replace("''", ""));
 				}
 			}
 		}
 	}
 	
-	public void printVariable(String[] words) {
-		for(int i=0; i<words.length-1; i++) {
-			if(words[i].contains("print") && 
-					words[i+1].charAt(0)=='@') {
+	public void printVariable(String[] lexemes) {
+		for(int i=0; i<lexemes.length-1; i++) {
+			if(lexemes[i].contains("print") && 
+					lexemes[i+1].charAt(0)=='@') {
 				System.out.println("Print Identified: ");
 				System.out.println(variables.get(
-					words[i+1]).replace("'", ""));
-			} else if (words[i].contains("print") && 
-					words[i+1].charAt(0)=='\'') {
+					lexemes[i+1]).replace("'", ""));
+			} else if (lexemes[i].contains("print") && 
+					lexemes[i+1].charAt(0)=='\'') {
 				System.out.println("Print Identified: ");
 				System.out.println(
-					words[i+1].replace("'", ""));
+					lexemes[i+1].replace("'", ""));
 			}
 		}
 	}
