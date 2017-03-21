@@ -19,19 +19,19 @@ public class ECController {
     
     private void addListeners() {
         
-        view.getRunButton().addActionListener(new ActionListener() {
+    	view.getRunButton().addActionListener(new ActionListener() {
             
-            @Override
+    		@Override
             public void actionPerformed(ActionEvent e) {
             	ECInterpreter ecInterpreter = new ECInterpreter();
             	String input = view.getTextArea().getText();
 
-               if (ecSyntaxChecker.match(input)) {
-            	   ecInterpreter.interpret(input);
-                   view.getResArea().setText("YEY");
-               } else {
-                   view.getResArea().setText("BOO");
-               }
+            	if (ecSyntaxChecker.match(input)) {
+            		ecInterpreter.interpret(input);
+            		view.getResArea().setText("YEY");
+            	} else {
+            		view.getResArea().setText("BOO");
+            	}
             }
         });
         
