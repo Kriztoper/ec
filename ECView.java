@@ -3,6 +3,7 @@ package cmsc141.mp1.ec;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -29,27 +30,31 @@ public class ECView {
         buttonsPanel.setLayout(new FlowLayout());
 
         textPanel = new JPanel();
+        textPanel.setBackground(Color.LIGHT_GRAY);
         textPanel.setLayout(new FlowLayout());
         
         resultsPanel = new JPanel();
-        resultsPanel.setSize(frame.getWidth()/3, frame.getHeight()/4);
-        resultsPanel.setBackground(Color.LIGHT_GRAY);
+        resultsPanel.setBackground(Color.GRAY);
+        resultsPanel.setLayout(new FlowLayout());
         
-        textArea = new JTextArea(45, 60);
-        resArea = new JTextArea(45, 50);
+        textArea = new JTextArea(Constants.HEIGHT/28, Constants.WIDTH/18);
+        textArea.setTabSize(2);
+        
+        resArea = new JTextArea(Constants.HEIGHT/40, Constants.WIDTH/18);
         resArea.setText("");
         resArea.setEditable(false);
+        
         runButton = new JButton("Run");
         newButton = new JButton("New");
 
         buttonsPanel.add(runButton);
         buttonsPanel.add(newButton);
         textPanel.add(new JScrollPane(textArea));
-        textPanel.add(resArea);
+        resultsPanel.add(new JScrollPane(resArea));
         
         frame.add(buttonsPanel, BorderLayout.NORTH);
         frame.add(textPanel, BorderLayout.CENTER);
-        //frame.add(resultsPanel, BorderLayout.CENTER);
+        frame.add(resultsPanel, BorderLayout.SOUTH);
     }
 
     public JButton getNewButton() {
