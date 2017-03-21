@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class ECParserUnitTester {
+public class ECUnitTester {
 
 	@Test
 	public void test() {
