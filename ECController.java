@@ -26,12 +26,12 @@ public class ECController {
             	ECInterpreter ecInterpreter = new ECInterpreter();
             	String input = view.getTextArea().getText();
 
-               if (ecSyntaxChecker.match(input)) {
-            	   ecInterpreter.interpret(input);
-                   view.getResArea().setText("YEY");
-               } else {
-                   view.getResArea().setText("BOO");
-               }
+            	if (ecSyntaxChecker.match(input)) {
+            	    ecInterpreter.interpret(input);
+            	    view.getResArea().setText("YEY");
+            	} else {
+            	    view.getResArea().setText("BOO");
+            	}
             }
         });
         
