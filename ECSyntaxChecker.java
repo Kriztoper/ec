@@ -47,7 +47,7 @@ public class ECSyntaxChecker {
 	//private static String stmt_block = "(" + conditional + "|" + iteration + ")";
 	//private static String paragraph = "((" + sentence + "|" + stmt_block + ")*)";
 	
-	private static String main = "(^main\\s+do\\s+" + paragraph + "end$)";
+	private static String main = "(^\\s*main\\s+do\\s+" + paragraph + "end\\s*$)";
 	private static String program  = main;
 
 	private Pattern pattern;

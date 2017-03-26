@@ -58,6 +58,7 @@ public class ECUnitTester {
 				+ "if @a < @b do 1 + 1 end while @var == 1 end end"));
 		assertTrue(ecParser.hasMatch("main do if @a >= @b do for @c = 0; @c < 10;  do "
 				+ "1 + 1 end end end"));
+		assertTrue(ecParser.hasMatch("main do if @a < @b do print 'Hello po!' end end"));
 		
 		// strings should not match (syntactically incorrect) -- false
 		assertFalse(ecParser.hasMatch("main d o @var = 2 end")); // must be do

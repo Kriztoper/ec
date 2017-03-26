@@ -2,9 +2,9 @@ package cmsc141.mp1.ec;
 
 import java.util.ArrayList;
 
-public class ECParser {
+public class ECLexer {
 
-	public ECParser() {
+	public ECLexer() {
 		
 	}
 	
@@ -60,6 +60,10 @@ public class ECParser {
 		}
 		lexemes.remove(0);
 		lexemes.remove(0);
+
+		/*if (lexemes.get(lexemes.size()-1).equals("end")) {
+			lexemes.remove(lexemes.size()-1);
+		}*/
 		
 		System.out.println("Tokenized lexemes\n" + lexemes);
 		
