@@ -16,7 +16,7 @@ public class ECInterpreter {
 //		String[] words = program.split(" ");
 		findVariables(lexemes);
 		analyzeLexemes(lexemes);
-		printVariable(lexemes);
+		//printVariable(lexemes);
 	}
 	
 	public void analyzeLexemes(String[] lexemes) {
@@ -77,7 +77,7 @@ public class ECInterpreter {
 						offsetToAdd++;
 					}
 					
-					for (int j = 2; j < lexemes.length; j++) {
+					for (int j = 2; (i+j) < lexemes.length; j++) {
 						if (lexemes[i+j].equals("+")) {
 							j++;
 							if (lexemes[i+j].contains("'")) {
@@ -98,7 +98,9 @@ public class ECInterpreter {
 						}
 					}
 //					System.out.println("amma print");
+					System.out.println("~~~~~~~~");
 					System.out.println(stringToPrint);
+					System.out.println("~~~~~~~~");
 					i += offsetToAdd;
 					continue;
 				}
