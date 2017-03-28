@@ -27,8 +27,8 @@ public class ECController {
             	String input = view.getTextArea().getText();
 
             	if (ecSyntaxChecker.match(input)) {
-            	    ecInterpreter.interpret(input);
-            	    view.getResArea().setText("YEY");
+            	    String output = ecInterpreter.interpret(input);
+            	    view.getResArea().setText(output);
             	} else {
             	    view.getResArea().setText("BOO");
             	}

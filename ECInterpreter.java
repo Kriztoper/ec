@@ -10,100 +10,107 @@ public class ECInterpreter {
 		isExecutable = true;
 	}
 	
-	public void interpret(String program) {
+	public String interpret(String program) {
 		ECLexer ecLexer = new ECLexer();
 		String[] lexemes = ecLexer.tokenize(program);
 //		String[] words = program.split(" ");
-		findVariables(lexemes);
-		analyzeLexemes(lexemes);
+		//findVariables(lexemes);
+		String output = analyzeLexemes(lexemes);
 		//printVariable(lexemes);
+		return output;
 	}
 	
-	public void analyzeLexemes(String[] lexemes) {
+	public String analyzeLexemes(String[] lexemes) {
+		String output = "";
 		for (int i = 0; i < lexemes.length; i++) {
 			
-			if (isExecutable) {
-				if (lexemes[i].equals("if") && 
-						!lexemes[i+1].equals("not")) { // if without a not in condition
-					System.out.println("Found an if without a not");
-					String leftExpr = lexemes[i+1]; // left expression
-					String relOptr = lexemes[i+2]; // relational operator
-					String rightExpr = lexemes[i+3]; // right expression
-					
-					if (checkCondition(leftExpr, relOptr, rightExpr)) {
-						System.out.println("Condition is satisfied");
-						isExecutable = true;
-						i += 3;
-						continue;
-					} else {
-						System.out.println("Condition is not satisfied");
-						isExecutable = false;
-						i += 3;
-						continue;
-					}
-				} else if (lexemes[i].equals("if") && 
-						lexemes[i+1].equals("not")) { // if with a not in condition
-					System.out.println("Found an if with a not");
-					String leftExpr = lexemes[i+2]; // left expression
-					String relOptr = lexemes[i+3]; // relational operator
-					String rightExpr = lexemes[i+4]; // right expression
-					
-					if (!checkCondition(leftExpr, relOptr, rightExpr)) {
-						System.out.println("Condition is satisfied");
-						isExecutable = true;
-						i += 4;
-						continue;
-					} else {
-						System.out.println("Condition is not satisfied");
-						isExecutable = false;
-						i += 4;
-						continue;
-					}
-				} else if (lexemes[i].equals("print")) {
-					int offsetToAdd = 0;
-					String stringToPrint = "";
-					
-					if (lexemes[i+1].contains("'")) {
-						String string = lexemes[i+1];
-						string = string.substring(1, string.length()-1);
-						stringToPrint += string;
-						offsetToAdd++;
-					} else if (lexemes[i+1].startsWith("@")) {
-						String string = getValueOfVariable(lexemes[i+1]);
-						if (string.contains("'")) {
-							string = string.substring(1, string.length()-1);
-						}
-						stringToPrint += string;
-						offsetToAdd++;
-					}
-					
-					for (int j = 2; (i+j) < lexemes.length; j++) {
-						if (lexemes[i+j].equals("+")) {
-							j++;
-							if (lexemes[i+j].contains("'")) {
-								String string = lexemes[i+j];
-								string = string.substring(1, string.length()-1);
-								stringToPrint += string;
-								offsetToAdd += 2;
-							} else if (lexemes[i+j].startsWith("@")) {
-								String string = getValueOfVariable(lexemes[i+j]);
-								if (string.contains("'")) {
-									string = string.substring(1, string.length()-1);
-								}
-								stringToPrint += string;
-								offsetToAdd += 2;
-							}
-						} else {
-							break;
-						}
-					}
-//					System.out.println("amma print");
-					System.out.println("~~~~~~~~");
-					System.out.println(stringToPrint);
-					System.out.println("~~~~~~~~");
-					i += offsetToAdd;
+			if (lexemes[i].startsWith("@") && 
+					lexemes[i+1].equals("=")) {
+				if (variables.containsKey(lexemes[i])) {
+					variables.replace(lexemes[i], lexemes[i+2]);
+				} else {
+					variables.put(lexemes[i], lexemes[i+2]);
+				}
+			} else if (lexemes[i].equals("if") && 
+					!lexemes[i+1].equals("not")) { // if without a not in condition
+				System.out.println("Found an if without a not");
+				String leftExpr = lexemes[i+1]; // left expression
+				String relOptr = lexemes[i+2]; // relational operator
+				String rightExpr = lexemes[i+3]; // right expression
+				
+				if (checkCondition(leftExpr, relOptr, rightExpr)) {
+					System.out.println("Condition is satisfied");
+					isExecutable = true;
+					i += 3;
+					continue;
+				} else {
+					System.out.println("Condition is not satisfied");
+					isExecutable = false;
+					i += 3;
 					continue;
 				}
+			} else if (lexemes[i].equals("if") && 
+					lexemes[i+1].equals("not")) { // if with a not in condition
+				System.out.println("Found an if with a not");
+				String leftExpr = lexemes[i+2]; // left expression
+				String relOptr = lexemes[i+3]; // relational operator
+				String rightExpr = lexemes[i+4]; // right expression
+				
+				if (!checkCondition(leftExpr, relOptr, rightExpr)) {
+					System.out.println("Condition is satisfied");
+					isExecutable = true;
+					i += 4;
+					continue;
+				} else {
+					System.out.println("Condition is not satisfied");
+					isExecutable = false;
+					i += 4;
+					continue;
+				}
+			} else if (lexemes[i].equals("else ")) {
+				
+			} else if (lexemes[i].equals("print")) {
+				int offsetToAdd = 0;
+				String stringToPrint = "";
+				
+				if (lexemes[i+1].contains("'")) {
+					String string = lexemes[i+1];
+					string = string.substring(1, string.length()-1);
+					stringToPrint += string;
+					offsetToAdd++;
+				} else if (lexemes[i+1].startsWith("@")) {
+					String string = getValueOfVariable(lexemes[i+1]);
+					if (string.contains("'")) {
+						string = string.substring(1, string.length()-1);
+					}
+					stringToPrint += string;
+					offsetToAdd++;
+				}
+				
+				for (int j = 2; (i+j) < lexemes.length; j++) {
+					if (lexemes[i+j].equals("+")) {
+						j++;
+						if (lexemes[i+j].contains("'")) {
+							String string = lexemes[i+j];
+							string = string.substring(1, string.length()-1);
+							stringToPrint += string;
+							offsetToAdd += 2;
+						} else if (lexemes[i+j].startsWith("@")) {
+							String string = getValueOfVariable(lexemes[i+j]);
+							if (string.contains("'")) {
+								string = string.substring(1, string.length()-1);
+							}
+							stringToPrint += string;
+							offsetToAdd += 2;
+						}
+					} else {
+						break;
+					}
+				}
+//					System.out.println("amma print");
+				output += stringToPrint;
+				i += offsetToAdd;
+				continue;
 			}
 			
 			if (lexemes[i].equals("end")) {
@@ -111,6 +118,8 @@ public class ECInterpreter {
 				isExecutable = true;
 			}
 		}
+		
+		return output;
 	}
 	
 	public boolean checkCondition(String leftExpr, String relOptr, String rightExpr) {
@@ -295,5 +304,19 @@ public class ECInterpreter {
 	
 	public void addVariables(String key, String value) {
 		variables.put(key, value);
+	}
+	
+	class ECConditionalBlock {
+		private int startIndex;
+		private int endIndex;
+		private String[] lexemesBlock;
+		
+		public ECConditionalBlock(int startIndex, int endIndex, String[] lexemesBlock) {
+			this.startIndex = startIndex;
+			this.endIndex = endIndex;
+			this.lexemesBlock = lexemesBlock;
+		}
+		
+		
 	}
 }
