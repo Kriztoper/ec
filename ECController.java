@@ -28,9 +28,13 @@ public class ECController {
 
             	if (ecSyntaxChecker.match(input)) {
             	    String output = ecInterpreter.interpret(input);
-            	    view.getResArea().setText(output);
+            	    view.getResArea().setText("********************\n"
+            	    		+ "Syntax is Legit!\n"
+            	    		+ "********************\n" + output);
             	} else {
-            	    view.getResArea().setText("BOO");
+            	    view.getResArea().setText("********************\n"
+            	    		+ "Syntax Error!\n"
+            	    		+ "********************\n");
             	}
             }
         });
