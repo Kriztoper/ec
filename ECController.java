@@ -27,10 +27,12 @@ public class ECController {
             	String input = view.getTextArea().getText();
 
             	if (ecSyntaxChecker.match(input)) {
-            		//String output = ecInterpreter.interpret(input);
-            	    view.getResArea().setText("YEY");
+            		String output = ecInterpreter.interpret(input);
+            	    view.getResArea().setText(output);
             	} else {
-            	    view.getResArea().setText("BOO");
+            	    view.getResArea().setText("********************\n"
+            	    		+ "Syntax Error!\n"
+            	    		+ "********************\n");
             	}
             }
         });

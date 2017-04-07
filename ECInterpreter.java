@@ -4,10 +4,12 @@ import java.util.Hashtable;
 
 public class ECInterpreter {
 	private Hashtable<String, String> variables = new Hashtable();
-	private boolean isExecutable;
+	private boolean isExec; // is executable
+	private boolean condIsExec; // conditional is executable
 	
 	public ECInterpreter() {
-		isExecutable = true;
+		isExec = true;
+		condIsExec = false;
 	}
 	
 	public String interpret(String program) {
@@ -51,8 +53,11 @@ public class ECInterpreter {
 						variables.put(lexemes[i], lexemes[i+2]);
 					}
 				}
+				
 			} else if (lexemes[i].equals("if") && 
-					!lexemes[i+1].equals("not")) { // if without a not in condition
+					!lexemes[i+1].equals("not") &&
+					!condIsExec) { // if without a not in condition
+				isExec = true;
 				System.out.println("Found an if without a not");
 				String leftExpr = lexemes[i+1]; // left expression
 				String relOptr = lexemes[i+2]; // relational operator
@@ -60,17 +65,18 @@ public class ECInterpreter {
 				
 				if (checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
-					isExecutable = true;
+					condIsExec = true;
 					i += 3;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
-					isExecutable = false;
+					condIsExec = false;
 					i += 3;
 					continue;
 				}
 			} else if (lexemes[i].equals("if") && 
-					lexemes[i+1].equals("not")) { // if with a not in condition
+					lexemes[i+1].equals("not") &&
+					!condIsExec) { // if with a not in condition
 				System.out.println("Found an if with a not");
 				String leftExpr = lexemes[i+2]; // left expression
 				String relOptr = lexemes[i+3]; // relational operator
@@ -78,12 +84,12 @@ public class ECInterpreter {
 				
 				if (!checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
-					isExecutable = true;
+					condIsExec = true;
 					i += 4;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
-					isExecutable = false;
+					condIsExec = false;
 					i += 4;
 					continue;
 				}
@@ -137,7 +143,7 @@ public class ECInterpreter {
 			
 			if (lexemes[i].equals("end")) {
 				System.out.println("Found an end");
-				isExecutable = true;
+				condIsExec = true;
 			}
 		}
 		
@@ -293,7 +299,7 @@ public class ECInterpreter {
 			if(lexemes[i].startsWith("@") && 
 					lexemes[i+1].equals("=")) {
 				System.out.println(lexemes[i] + " = " + lexemes[i+2]);
-				addVariables(lexemes[i], lexemes[i+2]);
+				addVariable(lexemes[i], lexemes[i+2]);
 			}
 		}
 		
@@ -339,15 +345,19 @@ public class ECInterpreter {
 		}
 	}
 	
+	public void replaceValueOfVariable(String variableName, String newValue) {
+		variables.replace(variableName, newValue);
+	}
+	
+	public void addVariable(String variableName, String value) {
+		variables.put(variableName, value);
+	}
+	
 	public boolean isOperator(String symbol) {
 		if("+-/*%".contains(symbol))
 			return true;
 		else
 			return false;
-	}
-	
-	public void addVariables(String key, String value) {
-		variables.put(key, value);
 	}
 	
 	class ECConditionalBlock {
