@@ -28,9 +28,7 @@ public class ECController {
 
             	if (ecSyntaxChecker.match(input)) {
             	    String output = ecInterpreter.interpret(input);
-            	    view.getResArea().setText("********************\n"
-            	    		+ "Syntax is Legit!\n"
-            	    		+ "********************\n" + output);
+            	    view.getResArea().setText(output);
             	} else {
             	    view.getResArea().setText("********************\n"
             	    		+ "Syntax Error!\n"
