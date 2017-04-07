@@ -27,15 +27,31 @@ public class ECInterpreter {
 		for (int i = 0; i < lexemes.length; i++) {
 			
 			if (lexemes[i].startsWith("@") && 
-					lexemes[i+1].equals("=") && isExec) {
-				if (variables.containsKey(lexemes[i])) {
-					replaceValueOfVariable(lexemes[i], lexemes[i+2]);
-				} else {
-					addVariable(lexemes[i], lexemes[i+2]);
-				}
-				
-				if (lexemes[i+1].equals("else")) {
+					lexemes[i+1].equals("=")) {
+				if(isOperator(lexemes[i+3])) {
+					int value = 0;
 					
+					if(lexemes[i+2].startsWith("@") && lexemes[i+4].startsWith("@")) {
+						value = operate(Integer.parseInt(getValueOfVariable(lexemes[i+2])), Integer.parseInt(getValueOfVariable(lexemes[i+4])), lexemes[i+3]);
+					} else if(lexemes[i+2].startsWith("@")) {
+						value = operate(Integer.parseInt(getValueOfVariable(lexemes[i+2])), Integer.parseInt(lexemes[i+4]), lexemes[i+3]);
+					} else if(lexemes[i+4].startsWith("@")) {
+						value = operate(Integer.parseInt(lexemes[i+2]), Integer.parseInt(getValueOfVariable(lexemes[i+4])), lexemes[i+3]);
+					} else {
+						value = operate(Integer.parseInt(lexemes[i+2]), Integer.parseInt(lexemes[i+4]), lexemes[i+3]);
+					}	
+					
+					if (variables.containsKey(lexemes[i])) {
+						variables.replace(lexemes[i], ""+value);
+					} else {
+						variables.put(lexemes[i], ""+value);
+					}
+				} else {
+					if (variables.containsKey(lexemes[i])) {
+						variables.replace(lexemes[i], lexemes[i+2]);
+					} else {
+						variables.put(lexemes[i], lexemes[i+2]);
+					}
 				}
 				
 			} else if (lexemes[i].equals("if") && 
@@ -121,6 +137,8 @@ public class ECInterpreter {
 				output += stringToPrint;
 				i += offsetToAdd;
 				continue;
+			} else if(lexemes[i].equals("scan")) {
+				
 			}
 			
 			if (lexemes[i].equals("end")) {
@@ -296,6 +314,21 @@ public class ECInterpreter {
 		}*/
 	}
 	
+	public int operate(int operand1, int operand2, String operator) {
+		if(operator.equals("+"))
+			return operand1 + operand2;
+		else if(operator.equals("-")) 
+			return operand1 - operand2;
+		else if(operator.equals("*"))
+			return operand1 * operand2;
+		else if(operator.equals("/"))
+			return operand1 / operand2;
+		else if(operator.equals("%"))
+			return operand1 % operand2;
+		else
+			return 0;
+	}
+	
 	public void printVariable(String[] lexemes) {
 		for(int i=0; i<lexemes.length-1; i++) {
 			if(lexemes[i].contains("print") && 
@@ -318,6 +351,13 @@ public class ECInterpreter {
 	
 	public void addVariable(String variableName, String value) {
 		variables.put(variableName, value);
+	}
+	
+	public boolean isOperator(String symbol) {
+		if("+-/*%".contains(symbol))
+			return true;
+		else
+			return false;
 	}
 	
 	class ECConditionalBlock {
