@@ -30,21 +30,55 @@ public class ECInterpreter {
 					lexemes[i+1].equals("=") && !condIsNotExec) {
 				if(isOperator(lexemes[i+3])) {
 					int value = 0;
+					String operand1 = getValueOfVariable(lexemes[i+2]);
+					String operand2 = getValueOfVariable(lexemes[i+4]);
+					String operator = lexemes[i+3];
+					String stringValue = "";
+					boolean isStringValue = false;
 					
 					if(lexemes[i+2].startsWith("@") && lexemes[i+4].startsWith("@")) {
-						value = operate(Integer.parseInt(getValueOfVariable(lexemes[i+2])), Integer.parseInt(getValueOfVariable(lexemes[i+4])), lexemes[i+3]);
+						if (operand1.contains("'") && operand2.contains("'") && (operator.equals("+") || operator.equals("-"))) {
+							operand1 = operand1.replaceAll("'", "");
+							operand2 = operand2.replaceAll("'", "");
+							stringValue = operateOnString(operand1, operand2, operator);
+							isStringValue = true;
+						} else {
+							value = operate(Integer.parseInt(operand1), Integer.parseInt(operand2), operator);
+						}
 					} else if(lexemes[i+2].startsWith("@")) {
-						value = operate(Integer.parseInt(getValueOfVariable(lexemes[i+2])), Integer.parseInt(lexemes[i+4]), lexemes[i+3]);
+						if (operand1.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
+							operand1 = operand1.replaceAll("'", "");
+							operand2 = lexemes[i+4];
+							stringValue = operateOnString(operand1, operand2, operator);
+							isStringValue = true;
+						} else {
+							value = operate(Integer.parseInt(operand1), Integer.parseInt(operand2), operator);
+						}
 					} else if(lexemes[i+4].startsWith("@")) {
-						value = operate(Integer.parseInt(lexemes[i+2]), Integer.parseInt(getValueOfVariable(lexemes[i+4])), lexemes[i+3]);
+						if (operand2.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
+							operand1 = lexemes[i+2];
+							operand2 = operand2.replaceAll("'", "");
+							stringValue = operateOnString(operand1, operand2, operator);
+							isStringValue = true;
+						} else {
+							value = operate(Integer.parseInt(operand1), Integer.parseInt(operand2), operator);
+						}
 					} else {
-						value = operate(Integer.parseInt(lexemes[i+2]), Integer.parseInt(lexemes[i+4]), lexemes[i+3]);
+						value = operate(Integer.parseInt(operand1), Integer.parseInt(operand2), operator);
 					}	
 					
 					if (variables.containsKey(lexemes[i])) {
-						variables.replace(lexemes[i], ""+value);
+						if (isStringValue) {
+							variables.replace(lexemes[i], stringValue);
+						} else {
+							variables.replace(lexemes[i], ""+value);
+						}
 					} else {
-						variables.put(lexemes[i], ""+value);
+						if (isStringValue) {
+							variables.put(lexemes[i], stringValue);
+						} else {
+							variables.put(lexemes[i], ""+value);
+						}
 					}
 				} else {
 					if (variables.containsKey(lexemes[i])) {
@@ -327,6 +361,17 @@ public class ECInterpreter {
 			return operand1 % operand2;
 		else
 			return 0;
+	}
+
+	public String operateOnString(String operand1, String operand2, String operator) {
+		String stringValue = "";
+		if (operator.equals("+")) {
+			stringValue = operand1 + operand2;
+		} else if (operator.equals("-")) {
+			stringValue = operand1.replaceAll(operand2, "");
+		}
+		
+		return stringValue;
 	}
 	
 	public void printVariable(String[] lexemes) {
