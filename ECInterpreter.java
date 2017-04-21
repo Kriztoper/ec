@@ -179,9 +179,14 @@ public class ECInterpreter {
 				}
 			} else if (lexemes[i].equals("else ")) {
 				
-			} else if (lexemes[i].equals("print")) {
+			} else if (lexemes[i].equals("print") || lexemes[i].equals("puts")) {
+				boolean isPuts = false;
 				int offsetToAdd = 0;
 				String stringToPrint = "";
+
+				if (lexemes[i].equals("puts")) {
+					isPuts = true;
+				}
 				
 				if (lexemes[i+1].contains("'")) {
 					String string = lexemes[i+1];
@@ -219,6 +224,9 @@ public class ECInterpreter {
 				}
 //					System.out.println("amma print");
 				output += stringToPrint;
+				if (isPuts) {
+					output += '\n';
+				}
 				i += offsetToAdd;
 				continue;
 			} else if(lexemes[i].equals("scan")) {
