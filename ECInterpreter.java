@@ -27,7 +27,7 @@ public class ECInterpreter {
 		for (int i = 0; i < lexemes.length; i++) {
 			
 			if (lexemes[i].startsWith("@") && 
-					lexemes[i+1].equals("=") && !condIsNotExec) {
+					lexemes[i+1].equals("=") && isExec) {
 				if(isOperator(lexemes[i+3])) {
 					int value = 0;
 					String operand1 = getValueOfVariable(lexemes[i+2]);
@@ -129,7 +129,7 @@ public class ECInterpreter {
 				}
 			} else if (lexemes[i].equals("else ")) {
 				condIsNotExec = false;
-			} else if (lexemes[i].equals("print") && !condIsNotExec) {
+			} else if (lexemes[i].equals("print") && isExec) {
 				int offsetToAdd = 0;
 				String stringToPrint = "";
 				
@@ -171,7 +171,7 @@ public class ECInterpreter {
 				output += stringToPrint;
 				i += offsetToAdd;
 				continue;
-			} else if(lexemes[i].equals("scan") && !condIsNotExec) {
+			} else if(lexemes[i].equals("scan") && isExec) {
 				
 			}
 			
