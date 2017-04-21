@@ -59,9 +59,9 @@ public class ECInterpreter {
 							}
 						}
 					} else if(lexemes[i+2].startsWith("@")) {
+						operand2 = lexemes[i+4];
 						if (operand1.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
 							operand1 = operand1.replaceAll("'", "");
-							operand2 = lexemes[i+4];
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -79,8 +79,8 @@ public class ECInterpreter {
 							}
 						}
 					} else if(lexemes[i+4].startsWith("@")) {
+						operand1 = lexemes[i+2];
 						if (operand2.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
-							operand1 = lexemes[i+2];
 							operand2 = operand2.replaceAll("'", "");
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
@@ -99,6 +99,8 @@ public class ECInterpreter {
 							}
 						}
 					} else {
+						operand1 = lexemes[i+2];
+						operand2 = lexemes[i+4];
 						if (operand1.contains(".") && operand2.contains(".")) {
 							floatValue = operateOnFloat(Float.parseFloat(operand1), Float.parseFloat(operand2), operator);
 							isFloatValue = true;
