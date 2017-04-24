@@ -1,8 +1,22 @@
 package cmsc141.mp1.ec;
 
+import java.awt.Component;
+import java.awt.Window;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.peer.KeyboardFocusManagerPeer;
+import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Scanner;
 
-public class ECInterpreter {
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+
+public class ECInterpreter implements KeyListener{
+	private JTextArea console;
+	private int key = 0;
+	private boolean isEnter = false;
+	private String consoleInput = "";
 	private Hashtable<String, String> variables = new Hashtable();
 	private boolean isExec; // is executable
 	private boolean condIsExec; // conditional is executable
@@ -12,7 +26,10 @@ public class ECInterpreter {
 		condIsExec = false;
 	}
 	
-	public String interpret(String program) {
+	public String interpret(String program, JTextArea console) {
+		this.console = console;
+		console.addKeyListener(this);
+		
 		ECLexer ecLexer = new ECLexer();
 		String[] lexemes = ecLexer.tokenize(program);
 //		String[] words = program.split(" ");
@@ -134,11 +151,32 @@ public class ECInterpreter {
 					}
 				}
 //					System.out.println("amma print");
+				console.append(stringToPrint);
 				output += stringToPrint;
 				i += offsetToAdd;
 				continue;
 			} else if(lexemes[i].equals("scan")) {
+				//Scanner scan = new Scanner(System.in);
+				char letter = 0;
+				console.setEditable(true);	
 				
+				consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				
+				/*while(true) {
+					try {
+						letter = (char) System.in.read();
+						consoleInput += letter;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					if (letter == 13)
+						break;
+				}*/
+				
+				variables.put(lexemes[i+1], consoleInput);
+				
+				i++;
 			}
 			
 			if (lexemes[i].equals("end")) {
@@ -370,7 +408,31 @@ public class ECInterpreter {
 			this.endIndex = endIndex;
 			this.lexemesBlock = lexemesBlock;
 		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		key = e.getKeyCode();
 		
+		if(key == KeyEvent.VK_ENTER) {
+			System.out.println("Enter is pressed!");
+			console.setEditable(false);
+			isEnter = true;
+		} else {
+			isEnter = false;
+			consoleInput+=e.getKeyChar();
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 }
