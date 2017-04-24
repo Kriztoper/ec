@@ -143,7 +143,6 @@ public class ECInterpreter {
 			} else if (lexemes[i].equals("if") && 
 					!lexemes[i+1].equals("not") &&
 					!condIsNotExec) { // if without a not in condition
-				isExec = true;
 				System.out.println("Found an if without a not");
 				String leftExpr = lexemes[i+1]; // left expression
 				String relOptr = lexemes[i+2]; // relational operator
@@ -151,11 +150,13 @@ public class ECInterpreter {
 				
 				if (checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
+					isExec = true;
 					condIsNotExec = true;
 					i += 3;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
+					isExec = false;
 					condIsNotExec = false;
 					i += 3;
 					continue;
@@ -170,17 +171,19 @@ public class ECInterpreter {
 				
 				if (!checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
+					isExec = false;
 					condIsNotExec = true;
 					i += 4;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
+					isExec = true;
 					condIsNotExec = false;
 					i += 4;
 					continue;
 				}
 			} else if (lexemes[i].equals("else ")) {
-				condIsNotExec = false;
+				//condIsNotExec = false;
 			} else if (lexemes[i].equals("print") || lexemes[i].equals("puts") && isExec) {
 				boolean isPuts = false;
 				int offsetToAdd = 0;
@@ -235,8 +238,9 @@ public class ECInterpreter {
 				
 			}
 			
-			if (lexemes[i].equals("end")) {
+			if (lexemes[i].equals("end") && !isExec) {
 				System.out.println("Found an end");
+				isExec = true;
 				condIsNotExec = false;
 			}
 		}
