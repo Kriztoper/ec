@@ -1,16 +1,13 @@
 package cmsc141.mp1.ec;
 
-import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.peer.KeyboardFocusManagerPeer;
-import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Scanner;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class ECInterpreter implements KeyListener{
 	private JTextArea console;
@@ -43,7 +40,7 @@ public class ECInterpreter implements KeyListener{
 		String output = "";
 		for (int i = 0; i < lexemes.length; i++) {
 			
-			if (lexemes[i].startsWith("@") && 
+			if (lexemes[i].startsWith("@") && (i+1 < lexemes.length) &&
 					lexemes[i+1].equals("=")) {
 				if(isOperator(lexemes[i+3])) {
 					int value = 0;
@@ -112,7 +109,7 @@ public class ECInterpreter implements KeyListener{
 				}
 			} else if (lexemes[i].equals("else ")) {
 				
-			} else if (lexemes[i].equals("print")) {
+			} else if (lexemes[i].equals("print") || lexemes[i].equals("puts")) {
 				int offsetToAdd = 0;
 				String stringToPrint = "";
 				
@@ -158,9 +155,28 @@ public class ECInterpreter implements KeyListener{
 			} else if(lexemes[i].equals("scan")) {
 				//Scanner scan = new Scanner(System.in);
 				char letter = 0;
-				console.setEditable(true);	
+				//console.setEditable(true);	
 				
-				consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				
+				
+				String[] options = {"OK"};
+				JPanel panel = new JPanel();
+				JTextField txt = new JTextField(20);
+				panel.add(txt);
+				int selectedOption = JOptionPane.showOptionDialog(null, panel, "Input", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+				
+				if(selectedOption == 0)
+				{
+				    consoleInput = txt.getText();
+				}
+				
+
+				
+				//consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				if (null == consoleInput) {
+					consoleInput = "";
+				}
+				//consoleInput = ECScanManager.scan(this, console);
 				
 				/*while(true) {
 					try {
@@ -174,6 +190,7 @@ public class ECInterpreter implements KeyListener{
 						break;
 				}*/
 				
+				//console.setEditable(false);
 				variables.put(lexemes[i+1], consoleInput);
 				
 				i++;
@@ -426,13 +443,11 @@ public class ECInterpreter implements KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }
