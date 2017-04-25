@@ -55,11 +55,10 @@ public class ECInterpreter implements KeyListener{
 					boolean isFloatValue = false;
 					
 					if(lexemes[i+2].startsWith("@") && lexemes[i+4].startsWith("@")) {
+
 						if ((isString(operand1)) && (isString(operand2)) && (operator.equals("+") || operator.equals("-"))) {
 							operand1 = removeQuotes(operand1);
-							System.out.println("operan1 = " + operand1);
 							operand2 = removeQuotes(operand2);
-							System.out.println("oper2 = " + operand2);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -83,6 +82,7 @@ public class ECInterpreter implements KeyListener{
 						}
 					} else if(lexemes[i+2].startsWith("@")) {
 						operand2 = lexemes[i+4];
+
 						if (isString(operand1) && (operator.endsWith("+") || operator.endsWith("-"))) {
 							operand1 = removeQuotes(operand1);
 							stringValue = operateOnString(operand1, operand2, operator);
@@ -108,8 +108,10 @@ public class ECInterpreter implements KeyListener{
 						}
 					} else if(lexemes[i+4].startsWith("@")) {
 						operand1 = lexemes[i+2];
+
 						if (isString(operand2) && (operator.endsWith("+") || operator.endsWith("-"))) {
 							operand2 = removeQuotes(operand2);
+							
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -230,7 +232,7 @@ public class ECInterpreter implements KeyListener{
 					offsetToAdd++;
 				} else if (lexemes[i+1].startsWith("@")) {
 					String string = getValueOfVariable(lexemes[i+1]);
-					if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
+					if (string.startsWith("'") && string.endsWith("'")) {
 						string = string.substring(1, string.length()-1);
 					}
 					stringToPrint += string;
@@ -240,14 +242,14 @@ public class ECInterpreter implements KeyListener{
 				for (int j = 2; (i+j) < lexemes.length; j++) {
 					if (lexemes[i+j].equals("+")) {
 						j++;
-						if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
+						if (lexemes[i+j].startsWith("'") && lexemes[i+j].endsWith("'")) {
 							String string = lexemes[i+j];
 							string = string.substring(1, string.length()-1);
 							stringToPrint += string;
 							offsetToAdd += 2;
 						} else if (lexemes[i+j].startsWith("@")) {
 							String string = getValueOfVariable(lexemes[i+j]);
-							if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
+							if (string.startsWith("'") && string.endsWith("'")) {
 								string = string.substring(1, string.length()-1);
 							}
 							stringToPrint += string;
