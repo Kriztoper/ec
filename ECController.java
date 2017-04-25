@@ -25,7 +25,8 @@ public class ECController {
             public void actionPerformed(ActionEvent e) {
             	ECInterpreter ecInterpreter = new ECInterpreter();
             	String input = view.getTextArea().getText();
-
+            	view.getResArea().setText("");
+            	
             	if (ecSyntaxChecker.match(input)) {
             		String output = ecInterpreter.interpret(input, view.getResArea());
             	} else {
