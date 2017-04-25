@@ -54,8 +54,8 @@ public class ECInterpreter implements KeyListener{
 					
 					if(lexemes[i+2].startsWith("@") && lexemes[i+4].startsWith("@")) {
 						if (operand1.contains("'") && operand2.contains("'") && (operator.equals("+") || operator.equals("-"))) {
-							operand1 = operand1.replaceAll("'", "");
-							operand2 = operand2.replaceAll("'", "");
+							operand1 = removeQuotes(operand1);
+							operand2 = removeQuotes(operand2);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -75,7 +75,7 @@ public class ECInterpreter implements KeyListener{
 					} else if(lexemes[i+2].startsWith("@")) {
 						operand2 = lexemes[i+4];
 						if (operand1.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
-							operand1 = operand1.replaceAll("'", "");
+							operand1 = removeQuotes(operand1);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -95,7 +95,7 @@ public class ECInterpreter implements KeyListener{
 					} else if(lexemes[i+4].startsWith("@")) {
 						operand1 = lexemes[i+2];
 						if (operand2.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
-							operand2 = operand2.replaceAll("'", "");
+							operand2 = removeQuotes(operand2);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -268,7 +268,7 @@ public class ECInterpreter implements KeyListener{
 				{
 				    consoleInput = txt.getText();
 				}
-				
+				System.out.println(consoleInput);
 
 				
 				//consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
@@ -303,6 +303,16 @@ public class ECInterpreter implements KeyListener{
 		}
 		
 		return output;
+	}
+	
+	private String removeQuotes(String string) {
+	    String str = "";
+	    
+	    for (int i = 1; i < string.length()-1; i++) {
+	        str = str + string.charAt(i);
+	    }
+	    
+	    return str;
 	}
 	
 	public boolean checkCondition(String leftExpr, String relOptr, String rightExpr) {
@@ -504,7 +514,7 @@ public class ECInterpreter implements KeyListener{
 		if (operator.equals("+")) {
 			stringValue = operand1 + operand2;
 		} else if (operator.equals("-")) {
-			stringValue = operand1.replaceAll(operand2, "");
+			stringValue = removeQuotes(operand1);
 		}
 		
 		return stringValue;
