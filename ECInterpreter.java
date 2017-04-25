@@ -172,7 +172,11 @@ public class ECInterpreter implements KeyListener{
 					if (variables.containsKey(lexemes[i])) {
 						variables.replace(lexemes[i], lexemes[i+2]);
 					} else {
-						variables.put(lexemes[i], lexemes[i+2]);
+						if(lexemes[i+2].startsWith("@")) {
+							variables.put(lexemes[i], getValueOfVariable(lexemes[i+2]));
+						} else {
+							variables.put(lexemes[i], lexemes[i+2]);
+						}
 					}
 				}
 				
