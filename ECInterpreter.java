@@ -221,14 +221,14 @@ public class ECInterpreter implements KeyListener{
 				for (int j = 2; (i+j) < lexemes.length; j++) {
 					if (lexemes[i+j].equals("+")) {
 						j++;
-						if (lexemes[i+j].contains("'")) {
+						if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
 							String string = lexemes[i+j];
 							string = string.substring(1, string.length()-1);
 							stringToPrint += string;
 							offsetToAdd += 2;
 						} else if (lexemes[i+j].startsWith("@")) {
 							String string = getValueOfVariable(lexemes[i+j]);
-							if (string.contains("'")) {
+							if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
 								string = string.substring(1, string.length()-1);
 							}
 							stringToPrint += string;
