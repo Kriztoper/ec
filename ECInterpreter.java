@@ -57,7 +57,9 @@ public class ECInterpreter implements KeyListener{
 					if(lexemes[i+2].startsWith("@") && lexemes[i+4].startsWith("@")) {
 						if ((isString(operand1)) && (isString(operand2)) && (operator.equals("+") || operator.equals("-"))) {
 							operand1 = removeQuotes(operand1);
+							System.out.println("operan1 = " + operand1);
 							operand2 = removeQuotes(operand2);
+							System.out.println("oper2 = " + operand2);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -336,8 +338,12 @@ public class ECInterpreter implements KeyListener{
 	private String removeQuotes(String string) {
 	    String str = "";
 	    
-	    for (int i = 1; i < string.length()-1; i++) {
-	        str = str + string.charAt(i);
+	    if (string.startsWith("'") && string.endsWith("'")) {
+		    for (int i = 1; i < string.length()-1; i++) {
+		        str += string.charAt(i);
+		    }
+	    } else {
+	    	str = string;
 	    }
 	    
 	    return str;
@@ -542,7 +548,7 @@ public class ECInterpreter implements KeyListener{
 		if (operator.equals("+")) {
 			stringValue = operand1 + operand2;
 		} else if (operator.equals("-")) {
-			stringValue = removeQuotes(operand1);
+			stringValue = operand1.replaceAll(operand2, "");
 		}
 		
 		return stringValue;
