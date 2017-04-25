@@ -160,7 +160,10 @@ public class ECInterpreter implements KeyListener{
 				char letter = 0;
 				console.setEditable(true);	
 				
-				consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				do {
+					consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				} while(consoleInput.equals(""));
+				console.append(consoleInput+"\n");
 				
 				/*while(true) {
 					try {
