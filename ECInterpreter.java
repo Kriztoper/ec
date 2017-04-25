@@ -56,8 +56,8 @@ public class ECInterpreter implements KeyListener{
 					
 					if(lexemes[i+2].startsWith("@") && lexemes[i+4].startsWith("@")) {
 						if ((isString(operand1)) && (isString(operand2)) && (operator.equals("+") || operator.equals("-"))) {
-							operand1 = operand1.replaceAll("'", "");
-							operand2 = operand2.replaceAll("'", "");
+							operand1 = removeQuotes(operand1);
+							operand2 = removeQuotes(operand2);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -82,7 +82,7 @@ public class ECInterpreter implements KeyListener{
 					} else if(lexemes[i+2].startsWith("@")) {
 						operand2 = lexemes[i+4];
 						if (isString(operand1) && (operator.endsWith("+") || operator.endsWith("-"))) {
-							operand1 = operand1.replaceAll("'", "");
+							operand1 = removeQuotes(operand1);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -107,7 +107,7 @@ public class ECInterpreter implements KeyListener{
 					} else if(lexemes[i+4].startsWith("@")) {
 						operand1 = lexemes[i+2];
 						if (isString(operand2) && (operator.endsWith("+") || operator.endsWith("-"))) {
-							operand2 = operand2.replaceAll("'", "");
+							operand2 = removeQuotes(operand2);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
@@ -221,14 +221,14 @@ public class ECInterpreter implements KeyListener{
 					isPuts = true;
 				}
 				
-				if (lexemes[i+1].contains("'")) {
+				if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
 					String string = lexemes[i+1];
 					string = string.substring(1, string.length()-1);
 					stringToPrint += string;
 					offsetToAdd++;
 				} else if (lexemes[i+1].startsWith("@")) {
 					String string = getValueOfVariable(lexemes[i+1]);
-					if (string.contains("'")) {
+					if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
 						string = string.substring(1, string.length()-1);
 					}
 					stringToPrint += string;
@@ -238,14 +238,14 @@ public class ECInterpreter implements KeyListener{
 				for (int j = 2; (i+j) < lexemes.length; j++) {
 					if (lexemes[i+j].equals("+")) {
 						j++;
-						if (lexemes[i+j].contains("'")) {
+						if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
 							String string = lexemes[i+j];
 							string = string.substring(1, string.length()-1);
 							stringToPrint += string;
 							offsetToAdd += 2;
 						} else if (lexemes[i+j].startsWith("@")) {
 							String string = getValueOfVariable(lexemes[i+j]);
-							if (string.contains("'")) {
+							if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
 								string = string.substring(1, string.length()-1);
 							}
 							stringToPrint += string;
@@ -269,7 +269,11 @@ public class ECInterpreter implements KeyListener{
 				char letter = 0;
 				//console.setEditable(true);	
 				
-				
+	
+				/*do {
+					consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				} while(consoleInput.equals(""));
+				console.append(consoleInput+"\n");*/
 				
 				String[] options = {"OK"};
 				JPanel panel = new JPanel();
@@ -281,7 +285,7 @@ public class ECInterpreter implements KeyListener{
 				{
 				    consoleInput = txt.getText();
 				}
-				
+				System.out.println(consoleInput);
 
 				
 				//consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
@@ -326,8 +330,17 @@ public class ECInterpreter implements KeyListener{
 			return true;
 		}
 		
-		System.out.println(text + " is not a string");
 		return false;
+	}
+		
+	private String removeQuotes(String string) {
+	    String str = "";
+	    
+	    for (int i = 1; i < string.length()-1; i++) {
+	        str = str + string.charAt(i);
+	    }
+	    
+	    return str;
 	}
 	
 	public boolean checkCondition(String leftExpr, String relOptr, String rightExpr) {
@@ -529,7 +542,7 @@ public class ECInterpreter implements KeyListener{
 		if (operator.equals("+")) {
 			stringValue = operand1 + operand2;
 		} else if (operator.equals("-")) {
-			stringValue = operand1.replaceAll(operand2, "");
+			stringValue = removeQuotes(operand1);
 		}
 		
 		return stringValue;
