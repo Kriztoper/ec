@@ -331,14 +331,10 @@ public class ECInterpreter implements KeyListener{
 	}
 	
 	public boolean isString(String text) {
-		String numRegex = ".*\\d+.*";
-		String onlyNumRegex = "\\d+";
-		String notNumRegex = ".*[^\\d+].*";
-		if (text.contains("'") || (text.matches(numRegex) && text.matches(notNumRegex)) || !text.matches(onlyNumRegex)) {
-			return true;
-		}
-		
-		return false;
+		//String numRegex = "(\\d+ | -\\d+ | \\d+.\\d+ | -\\d+.\\d+)";
+		//Pattern pattern = Pattern.compile(numRegex);
+		String regex = "([0-9]+|-[0-9]+|[0-9]+.[0-9]+|-[0-9]+.[0-9]+)";
+		return !text.matches(regex);//!pattern.matcher(text).find();
 	}
 		
 	private String removeQuotes(String string) {
