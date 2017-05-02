@@ -56,6 +56,10 @@ public class ECView {
         frame.add(textPanel, BorderLayout.CENTER);
         frame.add(resultsPanel, BorderLayout.SOUTH);
     }
+    
+    public void setJTextArea(String str) {
+    	textArea.append(str);
+    }
 
     public JButton getNewButton() {
         return newButton;

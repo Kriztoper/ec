@@ -1,8 +1,19 @@
 package cmsc141.mp1.ec;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Hashtable;
 
-public class ECInterpreter {
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class ECInterpreter implements KeyListener{
+	private JTextArea console;
+	private int key = 0;
+	private boolean isEnter = false;
+	private String consoleInput = "";
 	private Hashtable<String, String> variables = new Hashtable();
 	private boolean isExec; // is executable
 	private boolean condIsExec; // conditional is executable
@@ -12,7 +23,10 @@ public class ECInterpreter {
 		condIsExec = false;
 	}
 	
-	public String interpret(String program) {
+	public String interpret(String program, JTextArea console) {
+		this.console = console;
+		console.addKeyListener(this);
+		
 		ECLexer ecLexer = new ECLexer();
 		String[] lexemes = ecLexer.tokenize(program);
 //		String[] words = program.split(" ");
@@ -24,9 +38,11 @@ public class ECInterpreter {
 	
 	public String analyzeLexemes(String[] lexemes) {
 		String output = "";
+		
+		lexemesLabel:
 		for (int i = 0; i < lexemes.length; i++) {
 			
-			if (lexemes[i].startsWith("@") && 
+			if (lexemes[i].startsWith("@") && (i+1 < lexemes.length) &&
 					lexemes[i+1].equals("=")) {
 				if(isOperator(lexemes[i+3])) {
 					int value = 0;
@@ -39,63 +55,82 @@ public class ECInterpreter {
 					boolean isFloatValue = false;
 					
 					if(lexemes[i+2].startsWith("@") && lexemes[i+4].startsWith("@")) {
-						if (operand1.contains("'") && operand2.contains("'") && (operator.equals("+") || operator.equals("-"))) {
-							operand1 = operand1.replaceAll("'", "");
-							operand2 = operand2.replaceAll("'", "");
+
+						if ((isString(operand1)) && (isString(operand2)) && (operator.equals("+") || operator.equals("-"))) {
+							operand1 = removeQuotes(operand1);
+							operand2 = removeQuotes(operand2);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
-							if (operand1.contains(".") && operand2.contains(".")) {
+							if ((operand1.contains(".") && !isString(operand1)) && (operand2.contains(".") && !isString(operand2))) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Float.parseFloat(operand2), operator);
 								isFloatValue = true;
-							} else if (operand1.contains(".")) {
+							} else if ((operand1.contains(".") && !isString(operand1)) && !isString(operand2)) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Integer.parseInt(operand2), operator);
 								isFloatValue = true;
-							} else if (operand2.contains(".")) {
+							} else if ((operand2.contains(".") && !isString(operand2)) && !isString(operand1)) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Float.parseFloat(operand2), operator);
 								isFloatValue = true;
-							} else {
+							} else if ((!isString(operand1)) && (!isString(operand2))) {
 								value = operate(Integer.parseInt(operand1), Integer.parseInt(operand2), operator);
+							} else {
+								console.append("********************\n"
+			            	    		+ "Invalid Operation!\n"
+			            	    		+ "********************\n");
+								break;
 							}
 						}
 					} else if(lexemes[i+2].startsWith("@")) {
 						operand2 = lexemes[i+4];
-						if (operand1.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
-							operand1 = operand1.replaceAll("'", "");
+
+						if (isString(operand1) && (operator.endsWith("+") || operator.endsWith("-"))) {
+							operand1 = removeQuotes(operand1);
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
-							if (operand1.contains(".") && operand2.contains(".")) {
+							if ((operand1.contains(".") && !isString(operand1)) && operand2.contains(".")) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Float.parseFloat(operand2), operator);
 								isFloatValue = true;
-							} else if (operand1.contains(".")) {
+							} else if ((operand1.contains(".") && !isString(operand1))) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Integer.parseInt(operand2), operator);
 								isFloatValue = true;
-							} else if (operand2.contains(".")) {
+							} else if (operand2.contains(".") && !isString(operand1)) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Float.parseFloat(operand2), operator);
 								isFloatValue = true;
-							} else {
+							} else if (!isString(operand1)) {
 								value = operate(Integer.parseInt(operand1), Integer.parseInt(operand2), operator);
+							} else {
+								console.append("********************\n"
+			            	    		+ "Invalid Operation!\n"
+			            	    		+ "********************\n");
+								break;
 							}
 						}
 					} else if(lexemes[i+4].startsWith("@")) {
 						operand1 = lexemes[i+2];
-						if (operand2.contains("'") && (operator.endsWith("+") || operator.endsWith("-"))) {
-							operand2 = operand2.replaceAll("'", "");
+
+						if (isString(operand2) && (operator.endsWith("+") || operator.endsWith("-"))) {
+							operand2 = removeQuotes(operand2);
+							
 							stringValue = operateOnString(operand1, operand2, operator);
 							isStringValue = true;
 						} else {
-							if (operand1.contains(".") && operand2.contains(".")) {
+							if (operand1.contains(".") && (operand2.contains(".") && !isString(operand2))) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Float.parseFloat(operand2), operator);
 								isFloatValue = true;
-							} else if (operand1.contains(".")) {
+							} else if (operand1.contains(".") && !isString(operand2)) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Integer.parseInt(operand2), operator);
 								isFloatValue = true;
-							} else if (operand2.contains(".")) {
+							} else if (operand2.contains(".") && !isString(operand2)) {
 								floatValue = operateOnFloat(Float.parseFloat(operand1), Float.parseFloat(operand2), operator);
 								isFloatValue = true;
-							} else {
+							} else if (!isString(operand2)) {
 								value = operate(Integer.parseInt(operand1), Integer.parseInt(operand2), operator);
+							} else {
+								console.append("********************\n"
+			            	    		+ "Invalid Operation!\n"
+			            	    		+ "********************\n");
+								break;
 							}
 						}
 					} else {
@@ -136,7 +171,11 @@ public class ECInterpreter {
 					if (variables.containsKey(lexemes[i])) {
 						variables.replace(lexemes[i], lexemes[i+2]);
 					} else {
-						variables.put(lexemes[i], lexemes[i+2]);
+						if(lexemes[i+2].startsWith("@")) {
+							variables.put(lexemes[i], getValueOfVariable(lexemes[i+2]));
+						} else {
+							variables.put(lexemes[i], lexemes[i+2]);
+						}
 					}
 				}
 				
@@ -190,14 +229,14 @@ public class ECInterpreter {
 					isPuts = true;
 				}
 				
-				if (lexemes[i+1].contains("'")) {
+				if (lexemes[i+1].startsWith("'") && lexemes[i+1].endsWith("'")) {
 					String string = lexemes[i+1];
 					string = string.substring(1, string.length()-1);
 					stringToPrint += string;
 					offsetToAdd++;
 				} else if (lexemes[i+1].startsWith("@")) {
 					String string = getValueOfVariable(lexemes[i+1]);
-					if (string.contains("'")) {
+					if (string.startsWith("'") && string.endsWith("'")) {
 						string = string.substring(1, string.length()-1);
 					}
 					stringToPrint += string;
@@ -207,14 +246,14 @@ public class ECInterpreter {
 				for (int j = 2; (i+j) < lexemes.length; j++) {
 					if (lexemes[i+j].equals("+")) {
 						j++;
-						if (lexemes[i+j].contains("'")) {
+						if (lexemes[i+j].startsWith("'") && lexemes[i+j].endsWith("'")) {
 							String string = lexemes[i+j];
 							string = string.substring(1, string.length()-1);
 							stringToPrint += string;
 							offsetToAdd += 2;
 						} else if (lexemes[i+j].startsWith("@")) {
 							String string = getValueOfVariable(lexemes[i+j]);
-							if (string.contains("'")) {
+							if (string.startsWith("'") && string.endsWith("'")) {
 								string = string.substring(1, string.length()-1);
 							}
 							stringToPrint += string;
@@ -225,14 +264,61 @@ public class ECInterpreter {
 					}
 				}
 //					System.out.println("amma print");
-				output += stringToPrint;
 				if (isPuts) {
-					output += '\n';
+					stringToPrint += '\n';
 				}
+				console.append(stringToPrint);
+				output += stringToPrint;
+				
 				i += offsetToAdd;
 				continue;
 			} else if(lexemes[i].equals("scan")) {
+				//Scanner scan = new Scanner(System.in);
+				char letter = 0;
+				//console.setEditable(true);	
 				
+	
+				/*do {
+					consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				} while(consoleInput.equals(""));
+				console.append(consoleInput+"\n");*/
+				
+				String[] options = {"OK"};
+				JPanel panel = new JPanel();
+				JTextField txt = new JTextField(20);
+				panel.add(txt);
+				int selectedOption = JOptionPane.showOptionDialog(null, panel, "Input", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+				
+				if(selectedOption == 0)
+				{
+				    consoleInput = txt.getText();
+				}
+				System.out.println(consoleInput);
+
+				
+				//consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
+				if (null == consoleInput) {
+					consoleInput = "";
+				}
+				console.append(consoleInput+"\n");
+				//consoleInput = ECScanManager.scan(this, console);
+				
+				/*while(true) {
+					try {
+						letter = (char) System.in.read();
+						consoleInput += letter;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					if (letter == 13)
+						break;
+				}*/
+				
+				//console.setEditable(false);
+				variables.put(lexemes[i+1], consoleInput);
+				
+				i++;
 			}
 			
 			if (lexemes[i].equals("end")) {
@@ -242,6 +328,27 @@ public class ECInterpreter {
 		}
 		
 		return output;
+	}
+	
+	public boolean isString(String text) {
+		//String numRegex = "(\\d+ | -\\d+ | \\d+.\\d+ | -\\d+.\\d+)";
+		//Pattern pattern = Pattern.compile(numRegex);
+		String regex = "([0-9]+|-[0-9]+|[0-9]+.[0-9]+|-[0-9]+.[0-9]+)";
+		return !text.matches(regex);//!pattern.matcher(text).find();
+	}
+		
+	private String removeQuotes(String string) {
+	    String str = "";
+	    
+	    if (string.startsWith("'") && string.endsWith("'")) {
+		    for (int i = 1; i < string.length()-1; i++) {
+		        str += string.charAt(i);
+		    }
+	    } else {
+	    	str = string;
+	    }
+	    
+	    return str;
 	}
 	
 	public boolean checkCondition(String leftExpr, String relOptr, String rightExpr) {
@@ -490,7 +597,29 @@ public class ECInterpreter {
 			this.endIndex = endIndex;
 			this.lexemesBlock = lexemesBlock;
 		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		key = e.getKeyCode();
 		
+		if(key == KeyEvent.VK_ENTER) {
+			System.out.println("Enter is pressed!");
+			console.setEditable(false);
+			isEnter = true;
+		} else {
+			isEnter = false;
+			consoleInput+=e.getKeyChar();
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 		
 	}
 }
