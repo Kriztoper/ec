@@ -16,11 +16,11 @@ public class ECInterpreter implements KeyListener{
 	private String consoleInput = "";
 	private Hashtable<String, String> variables = new Hashtable();
 	private boolean isExec; // is executable
-	private boolean condIsNotExec; // conditional is not executable
+	private boolean condHasExec; // conditional has executed
 	
 	public ECInterpreter() {
 		isExec = true;
-		condIsNotExec = false;
+		condHasExec = false;
 	}
 	
 	public String interpret(String program, JTextArea console) {
@@ -180,8 +180,7 @@ public class ECInterpreter implements KeyListener{
 				}
 				
 			} else if (lexemes[i].equals("if") && 
-					!lexemes[i+1].equals("not") &&
-					!condIsNotExec) { // if without a not in condition
+					!lexemes[i+1].equals("not")){
 				System.out.println("Found an if without a not");
 				String leftExpr = lexemes[i+1]; // left expression
 				String relOptr = lexemes[i+2]; // relational operator
@@ -190,19 +189,17 @@ public class ECInterpreter implements KeyListener{
 				if (checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
 					isExec = true;
-					condIsNotExec = true;
+					condHasExec = true;
 					i += 3;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
 					isExec = false;
-					condIsNotExec = false;
 					i += 3;
 					continue;
 				}
 			} else if (lexemes[i].equals("if") && 
-					lexemes[i+1].equals("not") &&
-					!condIsNotExec) { // if with a not in condition
+					lexemes[i+1].equals("not")){
 				System.out.println("Found an if with a not");
 				String leftExpr = lexemes[i+2]; // left expression
 				String relOptr = lexemes[i+3]; // relational operator
@@ -211,18 +208,21 @@ public class ECInterpreter implements KeyListener{
 				if (!checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
 					isExec = false;
-					condIsNotExec = true;
 					i += 4;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
 					isExec = true;
-					condIsNotExec = false;
+					condHasExec = true;
 					i += 4;
 					continue;
 				}
-			} else if (lexemes[i].equals("else ")) {
-				//condIsNotExec = false;
+			} else if (lexemes[i].equals("else")) {
+				if (condHasExec) {
+					isExec = false;
+				} else {
+					isExec = true;
+				}
 			} else if (lexemes[i].equals("print") || lexemes[i].equals("puts") && isExec) {
 				boolean isPuts = false;
 				int offsetToAdd = 0;
@@ -324,10 +324,10 @@ public class ECInterpreter implements KeyListener{
 				i++;
 			}
 			
-			if (lexemes[i].equals("end") && !isExec) {
+			if (lexemes[i].equals("end")) {
 				System.out.println("Found an end");
 				isExec = true;
-				condIsNotExec = false;
+				condHasExec = false;
 			}
 		}
 		
@@ -359,10 +359,80 @@ public class ECInterpreter implements KeyListener{
 		if (leftExpr.startsWith("@") && rightExpr.startsWith("@")) {
 			System.out.println("Both left and right expressions are "
 					+ "variables");
-			if (getValueOfVariable(leftExpr).contains("'") &&
-					getValueOfVariable(rightExpr).contains("'")) {
+			if (isString(getValueOfVariable(leftExpr)) &&
+					isString(getValueOfVariable(rightExpr))) {
 				System.out.println("Both left and right expressions are "
 						+ "string variables");
+				if (relOptr.equals("==")) {
+					System.out.println("operator is ==");
+					if (getValueOfVariable(leftExpr).equals(
+							getValueOfVariable(rightExpr))) {
+						System.out.println("Both" + 
+								" are equal");
+						return true;
+					} else {
+						System.out.println("Both" + 
+								" are not equal");
+						return false;
+					}
+				} else if (relOptr.equals("!=")) {
+					if (!getValueOfVariable(leftExpr).equals(
+							getValueOfVariable(rightExpr))) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("<")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == -1) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("<=")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == -1 ||
+							getValueOfVariable(leftExpr).compareTo(
+									getValueOfVariable(rightExpr)) == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals(">")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == 1) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals(">=")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == 1 ||
+							getValueOfVariable(leftExpr).compareTo(
+									getValueOfVariable(rightExpr)) == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("and")) {
+					if (!getValueOfVariable(leftExpr).isEmpty() && 
+							!getValueOfVariable(rightExpr).isEmpty()) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("or")) {
+					if (!getValueOfVariable(leftExpr).isEmpty() || 
+							!getValueOfVariable(rightExpr).isEmpty()) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			} else if (!isString(getValueOfVariable(leftExpr)) &&
+					!isString(getValueOfVariable(rightExpr))){
+				System.out.println("Both left and right expressions are "
+						+ "constant variables");
 				if (relOptr.equals("==")) {
 					System.out.println("operator is ==");
 					if (getValueOfVariable(leftExpr).equals(
