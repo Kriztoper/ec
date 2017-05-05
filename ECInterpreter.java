@@ -16,11 +16,11 @@ public class ECInterpreter implements KeyListener{
 	private String consoleInput = "";
 	private Hashtable<String, String> variables = new Hashtable();
 	private boolean isExec; // is executable
-	private boolean condIsExec; // conditional is executable
+	private boolean condHasExec; // conditional has executed
 	
 	public ECInterpreter() {
 		isExec = true;
-		condIsExec = false;
+		condHasExec = false;
 	}
 	
 	public String interpret(String program, JTextArea console) {
@@ -42,8 +42,8 @@ public class ECInterpreter implements KeyListener{
 		lexemesLabel:
 		for (int i = 0; i < lexemes.length; i++) {
 			
-			if (lexemes[i].startsWith("@") && (i+1 < lexemes.length) &&
-					lexemes[i+1].equals("=")) {
+			if (lexemes[i].startsWith("@") && (i+1 < lexemes.length) && 
+					lexemes[i+1].equals("=") && isExec) {
 				if(isOperator(lexemes[i+3])) {
 					int value = 0;
 					float floatValue = (float) 0.0;
@@ -180,9 +180,7 @@ public class ECInterpreter implements KeyListener{
 				}
 				
 			} else if (lexemes[i].equals("if") && 
-					!lexemes[i+1].equals("not") &&
-					!condIsExec) { // if without a not in condition
-				isExec = true;
+					!lexemes[i+1].equals("not")){
 				System.out.println("Found an if without a not");
 				String leftExpr = lexemes[i+1]; // left expression
 				String relOptr = lexemes[i+2]; // relational operator
@@ -190,18 +188,18 @@ public class ECInterpreter implements KeyListener{
 				
 				if (checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
-					condIsExec = true;
+					isExec = true;
+					condHasExec = true;
 					i += 3;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
-					condIsExec = false;
+					isExec = false;
 					i += 3;
 					continue;
 				}
 			} else if (lexemes[i].equals("if") && 
-					lexemes[i+1].equals("not") &&
-					!condIsExec) { // if with a not in condition
+					lexemes[i+1].equals("not")){
 				System.out.println("Found an if with a not");
 				String leftExpr = lexemes[i+2]; // left expression
 				String relOptr = lexemes[i+3]; // relational operator
@@ -209,18 +207,23 @@ public class ECInterpreter implements KeyListener{
 				
 				if (!checkCondition(leftExpr, relOptr, rightExpr)) {
 					System.out.println("Condition is satisfied");
-					condIsExec = true;
+					isExec = false;
 					i += 4;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
-					condIsExec = false;
+					isExec = true;
+					condHasExec = true;
 					i += 4;
 					continue;
 				}
-			} else if (lexemes[i].equals("else ")) {
-				
-			} else if (lexemes[i].equals("print") || lexemes[i].equals("puts")) {
+			} else if (lexemes[i].equals("else")) {
+				if (condHasExec) {
+					isExec = false;
+				} else {
+					isExec = true;
+				}
+			} else if (lexemes[i].equals("print") || lexemes[i].equals("puts") && isExec) {
 				boolean isPuts = false;
 				int offsetToAdd = 0;
 				String stringToPrint = "";
@@ -272,7 +275,7 @@ public class ECInterpreter implements KeyListener{
 				
 				i += offsetToAdd;
 				continue;
-			} else if(lexemes[i].equals("scan")) {
+			} else if(lexemes[i].equals("scan") && isExec) {
 				//Scanner scan = new Scanner(System.in);
 				char letter = 0;
 				//console.setEditable(true);	
@@ -323,7 +326,8 @@ public class ECInterpreter implements KeyListener{
 			
 			if (lexemes[i].equals("end")) {
 				System.out.println("Found an end");
-				condIsExec = true;
+				isExec = true;
+				condHasExec = false;
 			}
 		}
 		
@@ -355,10 +359,80 @@ public class ECInterpreter implements KeyListener{
 		if (leftExpr.startsWith("@") && rightExpr.startsWith("@")) {
 			System.out.println("Both left and right expressions are "
 					+ "variables");
-			if (getValueOfVariable(leftExpr).contains("'") &&
-					getValueOfVariable(rightExpr).contains("'")) {
+			if (isString(getValueOfVariable(leftExpr)) &&
+					isString(getValueOfVariable(rightExpr))) {
 				System.out.println("Both left and right expressions are "
 						+ "string variables");
+				if (relOptr.equals("==")) {
+					System.out.println("operator is ==");
+					if (getValueOfVariable(leftExpr).equals(
+							getValueOfVariable(rightExpr))) {
+						System.out.println("Both" + 
+								" are equal");
+						return true;
+					} else {
+						System.out.println("Both" + 
+								" are not equal");
+						return false;
+					}
+				} else if (relOptr.equals("!=")) {
+					if (!getValueOfVariable(leftExpr).equals(
+							getValueOfVariable(rightExpr))) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("<")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == -1) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("<=")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == -1 ||
+							getValueOfVariable(leftExpr).compareTo(
+									getValueOfVariable(rightExpr)) == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals(">")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == 1) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals(">=")) {
+					if (getValueOfVariable(leftExpr).compareTo(
+							getValueOfVariable(rightExpr)) == 1 ||
+							getValueOfVariable(leftExpr).compareTo(
+									getValueOfVariable(rightExpr)) == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("and")) {
+					if (!getValueOfVariable(leftExpr).isEmpty() && 
+							!getValueOfVariable(rightExpr).isEmpty()) {
+						return true;
+					} else {
+						return false;
+					}
+				} else if (relOptr.equals("or")) {
+					if (!getValueOfVariable(leftExpr).isEmpty() || 
+							!getValueOfVariable(rightExpr).isEmpty()) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			} else if (!isString(getValueOfVariable(leftExpr)) &&
+					!isString(getValueOfVariable(rightExpr))){
+				System.out.println("Both left and right expressions are "
+						+ "constant variables");
 				if (relOptr.equals("==")) {
 					System.out.println("operator is ==");
 					if (getValueOfVariable(leftExpr).equals(
