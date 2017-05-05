@@ -180,7 +180,7 @@ public class ECInterpreter implements KeyListener{
 				}
 				
 			} else if (lexemes[i].equals("if") && 
-					!lexemes[i+1].equals("not")){
+					!lexemes[i+1].equals("not") && !condHasExec){
 				System.out.println("Found an if without a not");
 				String leftExpr = lexemes[i+1]; // left expression
 				String relOptr = lexemes[i+2]; // relational operator
@@ -199,7 +199,7 @@ public class ECInterpreter implements KeyListener{
 					continue;
 				}
 			} else if (lexemes[i].equals("if") && 
-					lexemes[i+1].equals("not")){
+					lexemes[i+1].equals("not") && !condHasExec){
 				System.out.println("Found an if with a not");
 				String leftExpr = lexemes[i+2]; // left expression
 				String relOptr = lexemes[i+3]; // relational operator
@@ -453,53 +453,143 @@ public class ECInterpreter implements KeyListener{
 						return false;
 					}
 				} else if (relOptr.equals("<")) {
-					if (getValueOfVariable(leftExpr).compareTo(
-							getValueOfVariable(rightExpr)) == -1) {
+					if (Float.parseFloat(getValueOfVariable(leftExpr)) < Float.parseFloat(getValueOfVariable(rightExpr))) {
+//							getValueOfVariable(leftExpr).compareTo(
+//							getValueOfVariable(rightExpr)) == -1) {
 						return true;
 					} else {
 						return false;
 					}
 				} else if (relOptr.equals("<=")) {
-					if (getValueOfVariable(leftExpr).compareTo(
-							getValueOfVariable(rightExpr)) == -1 ||
-							getValueOfVariable(leftExpr).compareTo(
-									getValueOfVariable(rightExpr)) == 0) {
+					if (Float.parseFloat(getValueOfVariable(leftExpr)) <= Float.parseFloat(getValueOfVariable(rightExpr))) {
+//							getValueOfVariable(leftExpr).compareTo(
+//							getValueOfVariable(rightExpr)) == -1 ||
+//							getValueOfVariable(leftExpr).compareTo(
+//									getValueOfVariable(rightExpr)) == 0) {
 						return true;
 					} else {
 						return false;
 					}
 				} else if (relOptr.equals(">")) {
-					if (getValueOfVariable(leftExpr).compareTo(
-							getValueOfVariable(rightExpr)) == 1) {
+					if (Float.parseFloat(getValueOfVariable(leftExpr)) > Float.parseFloat(getValueOfVariable(rightExpr))) {
+//							getValueOfVariable(leftExpr).compareTo(
+//							getValueOfVariable(rightExpr)) == 1) {
 						return true;
 					} else {
 						return false;
 					}
 				} else if (relOptr.equals(">=")) {
-					if (getValueOfVariable(leftExpr).compareTo(
-							getValueOfVariable(rightExpr)) == 1 ||
-							getValueOfVariable(leftExpr).compareTo(
-									getValueOfVariable(rightExpr)) == 0) {
+					if (Float.parseFloat(getValueOfVariable(leftExpr)) >= Float.parseFloat(getValueOfVariable(rightExpr))) {
+//							getValueOfVariable(leftExpr).compareTo(
+//							getValueOfVariable(rightExpr)) == 1 ||
+//							getValueOfVariable(leftExpr).compareTo(
+//									getValueOfVariable(rightExpr)) == 0) {
 						return true;
 					} else {
 						return false;
 					}
 				} else if (relOptr.equals("and")) {
-					if (!getValueOfVariable(leftExpr).isEmpty() && 
-							!getValueOfVariable(rightExpr).isEmpty()) {
+					if (Float.parseFloat(getValueOfVariable(leftExpr)) > 0 && Float.parseFloat(getValueOfVariable(rightExpr)) > 0) {
+//							!getValueOfVariable(leftExpr).isEmpty() && 
+//							!getValueOfVariable(rightExpr).isEmpty()) {
 						return true;
 					} else {
 						return false;
 					}
 				} else if (relOptr.equals("or")) {
-					if (!getValueOfVariable(leftExpr).isEmpty() || 
-							!getValueOfVariable(rightExpr).isEmpty()) {
+					if (Float.parseFloat(getValueOfVariable(leftExpr)) > 0 || Float.parseFloat(getValueOfVariable(rightExpr)) > 0) {
+//							!getValueOfVariable(leftExpr).isEmpty() || 
+//							!getValueOfVariable(rightExpr).isEmpty()) {
 						return true;
 					} else {
 						return false;
 					}
 				}
 			}
+		}
+		
+		return false;
+	}
+	
+	private boolean checkConstantsWithOr(String leftExpr, String rightExpr) {
+		if (leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0;
+		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) > 0 || Integer.parseInt(rightExpr) > 0;
+		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0;
+		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) > 0 || Integer.parseInt(rightExpr) > 0;
+		}
+		
+		return false;
+	}
+
+	private boolean checkConstantsWithAnd(String leftExpr, String rightExpr) {
+		if (leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0;
+		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) > 0 && Integer.parseInt(rightExpr) > 0;
+		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0;
+		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) > 0 && Integer.parseInt(rightExpr) > 0;
+		}
+		
+		return false;
+	}
+
+	private boolean checkConstantsIfLessThan(String leftExpr, String rightExpr) {
+		if (leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr);
+		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) < Integer.parseInt(rightExpr);
+		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) < Float.parseFloat(rightExpr);
+		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) < Integer.parseInt(rightExpr);
+		}
+		
+		return false;
+	}
+	
+	private boolean checkConstantsIfGreaterThan(String leftExpr, String rightExpr) {
+		if (leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr);
+		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) > Integer.parseInt(rightExpr);
+		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) > Float.parseFloat(rightExpr);
+		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) > Integer.parseInt(rightExpr);
+		}
+		
+		return false;
+	}
+
+	private boolean checkConstantsIfLessThanEquals(String leftExpr, String rightExpr) {
+		if (leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr);
+		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) <= Integer.parseInt(rightExpr);
+		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) <= Float.parseFloat(rightExpr);
+		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) <= Integer.parseInt(rightExpr);
+		}
+		
+		return false;
+	}
+	
+	private boolean checkConstantsIfGreaterThanEquals(String leftExpr, String rightExpr) {
+		if (leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr);
+		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Float.parseFloat(leftExpr) >= Integer.parseInt(rightExpr);
+		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) >= Float.parseFloat(rightExpr);
+		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
+			return Integer.parseInt(leftExpr) >= Integer.parseInt(rightExpr);
 		}
 		
 		return false;
