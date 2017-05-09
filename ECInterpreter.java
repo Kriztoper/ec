@@ -506,12 +506,448 @@ public class ECInterpreter implements KeyListener{
 					}
 				}
 			}
+		} else if (leftExpr.startsWith("@") && !rightExpr.startsWith("@") &&
+				!isString(getValueOfVariable(leftExpr)) && !isString(rightExpr)) { // const word op const
+			System.out.println("Left expr is const and"
+					+ " right expr is const word");
+			if (relOptr.equals("==")) {
+				System.out.println("operator is ==");
+				if (getValueOfVariable(leftExpr).equals(
+						rightExpr)) {
+					System.out.println("Both" + 
+							" are equal");
+					return true;
+				} else {
+					System.out.println("Both" + 
+							" are not equal");
+					return false;
+				}
+			} else if (relOptr.equals("!=")) {
+				if (!getValueOfVariable(leftExpr).equals(
+						rightExpr)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<")) {
+				if (Float.parseFloat(getValueOfVariable(leftExpr)) < Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == -1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<=")) {
+				if (Float.parseFloat(getValueOfVariable(leftExpr)) <= Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == -1 ||
+//						getValueOfVariable(leftExpr).compareTo(
+//								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">")) {
+				if (Float.parseFloat(getValueOfVariable(leftExpr)) > Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">=")) {
+				if (Float.parseFloat(getValueOfVariable(leftExpr)) >= Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == 1 ||
+//						getValueOfVariable(leftExpr).compareTo(
+//								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("and")) {
+				if (Float.parseFloat(getValueOfVariable(leftExpr)) > 0 && Float.parseFloat(rightExpr) > 0) {
+//						!getValueOfVariable(leftExpr).isEmpty() && 
+//						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("or")) {
+				if (Float.parseFloat(getValueOfVariable(leftExpr)) > 0 || Float.parseFloat(rightExpr) > 0) {
+//						!getValueOfVariable(leftExpr).isEmpty() || 
+//						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else if (!leftExpr.startsWith("@") && rightExpr.startsWith("@") &&
+				!isString(leftExpr) && !isString(getValueOfVariable(rightExpr))) { // const op const word
+			System.out.println("Left expr is const word and"
+					+ " right expr is const");
+			if (relOptr.equals("==")) {
+				System.out.println("operator is ==");
+				if (leftExpr.equals(
+						getValueOfVariable(rightExpr))) {
+					System.out.println("Both" + 
+							" are equal");
+					return true;
+				} else {
+					System.out.println("Both" + 
+							" are not equal");
+					return false;
+				}
+			} else if (relOptr.equals("!=")) {
+				if (!leftExpr.equals(
+						getValueOfVariable(rightExpr))) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<")) {
+				if (Float.parseFloat(leftExpr) < Float.parseFloat(getValueOfVariable(rightExpr))) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == -1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<=")) {
+				if (Float.parseFloat(leftExpr) <= Float.parseFloat(getValueOfVariable(rightExpr))) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == -1 ||
+//						getValueOfVariable(leftExpr).compareTo(
+//								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">")) {
+				if (Float.parseFloat(leftExpr) > Float.parseFloat(getValueOfVariable(rightExpr))) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">=")) {
+				if (Float.parseFloat(leftExpr) >= Float.parseFloat(getValueOfVariable(rightExpr))) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == 1 ||
+//						getValueOfVariable(leftExpr).compareTo(
+//								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("and")) {
+				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(getValueOfVariable(rightExpr)) > 0) {
+//						!getValueOfVariable(leftExpr).isEmpty() && 
+//						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("or")) {
+				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(getValueOfVariable(rightExpr)) > 0) {
+//						!getValueOfVariable(leftExpr).isEmpty() || 
+//						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else if (leftExpr.startsWith("@") && !rightExpr.startsWith("@") &&
+				isString(getValueOfVariable(leftExpr)) && isString(rightExpr)) { // string word op string
+			System.out.println("Left expr is string word and"
+					+ " right expr is string");
+			if (relOptr.equals("==")) {
+				System.out.println("operator is ==");
+				if (getValueOfVariable(leftExpr).equals(
+						rightExpr)) {
+					System.out.println("Both" + 
+							" are equal");
+					return true;
+				} else {
+					System.out.println("Both" + 
+							" are not equal");
+					return false;
+				}
+			} else if (relOptr.equals("!=")) {
+				if (!getValueOfVariable(leftExpr).equals(
+						rightExpr)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<")) {
+				if (getValueOfVariable(leftExpr).compareTo(
+						getValueOfVariable(rightExpr)) == -1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<=")) {
+				if (getValueOfVariable(leftExpr).compareTo(
+						rightExpr) == -1 ||
+						getValueOfVariable(leftExpr).compareTo(
+								rightExpr) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">")) {
+				if (getValueOfVariable(leftExpr).compareTo(
+						rightExpr) == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">=")) {
+				if (getValueOfVariable(leftExpr).compareTo(
+						rightExpr) == 1 ||
+						getValueOfVariable(leftExpr).compareTo(
+								rightExpr) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("and")) {
+				if (!getValueOfVariable(leftExpr).isEmpty() && 
+						!rightExpr.isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("or")) {
+				if (!getValueOfVariable(leftExpr).isEmpty() || 
+						!rightExpr.isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else if (!leftExpr.startsWith("@") && rightExpr.startsWith("@") &&
+				isString(leftExpr) && isString(getValueOfVariable(rightExpr))) { // string op string word
+			System.out.println("Left expr is string and"
+					+ " right expr is string word");
+			if (relOptr.equals("==")) {
+				System.out.println("operator is ==");
+				if (leftExpr.equals(
+						getValueOfVariable(rightExpr))) {
+					System.out.println("Both" + 
+							" are equal");
+					return true;
+				} else {
+					System.out.println("Both" + 
+							" are not equal");
+					return false;
+				}
+			} else if (relOptr.equals("!=")) {
+				if (!leftExpr.equals(
+						getValueOfVariable(rightExpr))) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<")) {
+				if (leftExpr.compareTo(
+						getValueOfVariable(rightExpr)) == -1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<=")) {
+				if (leftExpr.compareTo(
+						getValueOfVariable(rightExpr)) == -1 ||
+						leftExpr.compareTo(
+								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">")) {
+				if (leftExpr.compareTo(
+						getValueOfVariable(rightExpr)) == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">=")) {
+				if (leftExpr.compareTo(
+						getValueOfVariable(rightExpr)) == 1 ||
+						leftExpr.compareTo(
+								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("and")) {
+				if (!leftExpr.isEmpty() && 
+						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("or")) {
+				if (!leftExpr.isEmpty() || 
+						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else if (!leftExpr.startsWith("@") && !rightExpr.startsWith("@") &&
+				!isString(leftExpr) && !isString(rightExpr)) { // const op const word
+			System.out.println("Both expr are const");
+			if (relOptr.equals("==")) {
+				System.out.println("operator is ==");
+				if (leftExpr.equals(
+						rightExpr)) {
+					System.out.println("Both" + 
+							" are equal");
+					return true;
+				} else {
+					System.out.println("Both" + 
+							" are not equal");
+					return false;
+				}
+			} else if (relOptr.equals("!=")) {
+				if (!leftExpr.equals(
+						rightExpr)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<")) {
+				if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == -1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<=")) {
+				if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == -1 ||
+//						getValueOfVariable(leftExpr).compareTo(
+//								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">")) {
+				if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">=")) {
+				if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
+//						getValueOfVariable(leftExpr).compareTo(
+//						getValueOfVariable(rightExpr)) == 1 ||
+//						getValueOfVariable(leftExpr).compareTo(
+//								getValueOfVariable(rightExpr)) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("and")) {
+				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
+//						!getValueOfVariable(leftExpr).isEmpty() && 
+//						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("or")) {
+				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
+//						!getValueOfVariable(leftExpr).isEmpty() || 
+//						!getValueOfVariable(rightExpr).isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else if (!leftExpr.startsWith("@") && !rightExpr.startsWith("@") &&
+				isString(leftExpr) && isString(rightExpr)) { // string op string word
+			System.out.println("Both expr are string");
+			if (relOptr.equals("==")) {
+				System.out.println("operator is ==");
+				if (leftExpr.equals(
+						rightExpr)) {
+					System.out.println("Both" + 
+							" are equal");
+					return true;
+				} else {
+					System.out.println("Both" + 
+							" are not equal");
+					return false;
+				}
+			} else if (relOptr.equals("!=")) {
+				if (!leftExpr.equals(
+						rightExpr)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<")) {
+				if (leftExpr.compareTo(
+						rightExpr) == -1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("<=")) {
+				if (leftExpr.compareTo(
+						rightExpr) == -1 ||
+						leftExpr.compareTo(
+								rightExpr) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">")) {
+				if (leftExpr.compareTo(
+						rightExpr) == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals(">=")) {
+				if (leftExpr.compareTo(
+						rightExpr) == 1 ||
+						leftExpr.compareTo(
+								rightExpr) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("and")) {
+				if (!leftExpr.isEmpty() && 
+						!rightExpr.isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			} else if (relOptr.equals("or")) {
+				if (!leftExpr.isEmpty() || 
+						!rightExpr.isEmpty()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		}
 		
 		return false;
 	}
 	
-	private boolean checkConstantsWithOr(String leftExpr, String rightExpr) {
+/*	private boolean checkConstantsWithOr(String leftExpr, String rightExpr) {
 		if (leftExpr.contains(".") && rightExpr.contains(".")) {
 			return Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0;
 		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
@@ -594,6 +1030,7 @@ public class ECInterpreter implements KeyListener{
 		
 		return false;
 	}
+*/
 	
 	public String getValueOfVariable(String nameOfVariable) {
 		return variables.get(nameOfVariable);
