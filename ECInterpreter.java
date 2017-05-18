@@ -17,10 +17,12 @@ public class ECInterpreter implements KeyListener{
 	private Hashtable<String, String> variables = new Hashtable();
 	private boolean isExec; // is executable
 	private boolean condHasExec; // conditional has executed
+	private boolean isLoop;
 	
 	public ECInterpreter() {
 		isExec = true;
 		condHasExec = false;
+		isLoop = false;
 	}
 	
 	public String interpret(String program, JTextArea console) {
@@ -202,17 +204,13 @@ public class ECInterpreter implements KeyListener{
 				
 				i++;
 			} else if(lexemes[i].equals("for")) {
+				isLoop = true;
 				forLoop(i, lexemes);
 				
 				while(!lexemes[i].equals("end")) {
 					i++;
 				}
-			} else if(lexemes[i].equals("do")) {
-				doWhile(i, lexemes);
-				
-				while(!lexemes[i].equals("end")) {
-					i++;
-				}
+				isLoop = false;
 			}
 			
 			if (lexemes[i].equals("end")) {
@@ -220,7 +218,9 @@ public class ECInterpreter implements KeyListener{
 				
 				isExec = true;
 				condHasExec = false;
-				break;
+				if (isLoop) {
+					break;
+				}
 			}
 		}
 		
@@ -365,7 +365,7 @@ public class ECInterpreter implements KeyListener{
 		do {
 			analyzeLexemes(j+15, lexemes);
 			addVar(j+9, lexemes);
-		} while(checkCondition(lexemes[j+5], lexemes[j+6], lexemes[j+6]));
+		} while(checkCondition(lexemes[j+5], lexemes[j+6], lexemes[j+7]));
 	}
 	
 	public void doWhile(int i, String[] lexemes) {
@@ -376,7 +376,7 @@ public class ECInterpreter implements KeyListener{
 		
 		do {
 			analyzeLexemes(j+15, lexemes);
-		} while(checkCondition(lexemes[j+5], lexemes[j+6], lexemes[j+6]));
+		} while(checkCondition(lexemes[j+5], lexemes[j+6], lexemes[j+7]));
 	}
 	
 	private String removeQuotes(String string) {
