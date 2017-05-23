@@ -3,6 +3,8 @@ package cmsc141.mp1.ec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JTextArea;
+
 public class ECController {
 
     private ECView view;
@@ -30,7 +32,9 @@ public class ECController {
             	if (ecSyntaxChecker.match(input)) {
             		String output = ecInterpreter.interpret(input, view.getResArea());
             	} else {
-            	    view.getResArea().setText("********************\n"
+            	    JTextArea resArea = view.getResArea();
+            		// TODO: set syntax error font color to RED
+            	    resArea.setText("********************\n"
             	    		+ "Syntax Error!\n"
             	    		+ "********************\n");
             	}

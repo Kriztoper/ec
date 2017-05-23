@@ -61,6 +61,9 @@ public class ECLexer {
 		lexemes.remove(0);
 		lexemes.remove(0);
 
+		// add 'end' at the end
+		lexemes.add(entity);
+		
 		/*if (lexemes.get(lexemes.size()-1).equals("end")) {
 			lexemes.remove(lexemes.size()-1);
 		}*/
