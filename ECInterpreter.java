@@ -60,12 +60,12 @@ public class ECInterpreter implements KeyListener{
 					System.out.println("Condition is satisfied");
 					isExec = true;
 					condHasExec = true;
-					i += 3;
+					i += 4;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
 					isExec = false;
-					i += 3;
+					i += 4;
 					continue;
 				}
 			} else if (lexemes[i].equals("if") && 
@@ -79,12 +79,12 @@ public class ECInterpreter implements KeyListener{
 					System.out.println("Condition is satisfied");
 					isExec = true;
 					condHasExec = true;
-					i += 4;
+					i += 5;
 					continue;
 				} else {
 					System.out.println("Condition is not satisfied");
 					isExec = false;
-					i += 4;
+					i += 5;
 					continue;
 				}
 			} else if (lexemes[i].equals("else")) {

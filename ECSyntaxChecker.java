@@ -15,7 +15,7 @@ public class ECSyntaxChecker {
 	private static String word = "(@" + lower_alpha + "(" + upper_alpha + "|" + lower_alpha + "|" + number + ")*)";
 	private static String term = "(" + constant + "|" + word + ")";//"(" + constant + "|" + string + ")";
 	
-	private static String hi_order_op = "(/|\\*)";
+	private static String hi_order_op = "(/|\\*|%)";
 	private static String arith_op = "(\\+|-|" + hi_order_op + ")";
 	private static String arithmetic = term + "\\p{Blank}+" + arith_op + "\\p{Blank}+" + term;
 	
