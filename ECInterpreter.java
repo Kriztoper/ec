@@ -522,8 +522,8 @@ public class ECInterpreter implements KeyListener{
 						+ "constant variables");
 				if (relOptr.equals("==")) {
 					System.out.println("operator is ==");
-					if (leftExpr.equals(
-							rightExpr)) {
+					if (Float.parseFloat(leftExpr) ==
+							Float.parseFloat(rightExpr)) {
 						System.out.println("Both" + 
 								" are equal");
 						return true;
@@ -533,8 +533,8 @@ public class ECInterpreter implements KeyListener{
 						return false;
 					}
 				} else if (relOptr.equals("!=")) {
-					if (!leftExpr.equals(
-							rightExpr)) {
+					if (!(Float.parseFloat(leftExpr) ==
+							Float.parseFloat(rightExpr))) {
 						return true;
 					} else {
 						return false;
@@ -601,8 +601,8 @@ public class ECInterpreter implements KeyListener{
 					+ " right expr is const word");
 			if (relOptr.equals("==")) {
 				System.out.println("operator is ==");
-				if (leftExpr.equals(
-						rightExpr)) {
+				if (Float.parseFloat(leftExpr) == 
+						Float.parseFloat(rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
 					return true;
@@ -612,8 +612,8 @@ public class ECInterpreter implements KeyListener{
 					return false;
 				}
 			} else if (relOptr.equals("!=")) {
-				if (!leftExpr.equals(
-						rightExpr)) {
+				if (!(Float.parseFloat(leftExpr) ==
+						Float.parseFloat(rightExpr))) {
 					return true;
 				} else {
 					return false;
@@ -679,8 +679,8 @@ public class ECInterpreter implements KeyListener{
 					+ " right expr is const");
 			if (relOptr.equals("==")) {
 				System.out.println("operator is ==");
-				if (leftExpr.equals(
-						rightExpr)) {
+				if (Float.parseFloat(leftExpr) ==
+						Float.parseFloat(rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
 					return true;
@@ -690,8 +690,8 @@ public class ECInterpreter implements KeyListener{
 					return false;
 				}
 			} else if (relOptr.equals("!=")) {
-				if (!leftExpr.equals(
-						rightExpr)) {
+				if (!(Float.parseFloat(leftExpr) ==
+						Float.parseFloat(rightExpr))) {
 					return true;
 				} else {
 					return false;
@@ -898,8 +898,8 @@ public class ECInterpreter implements KeyListener{
 			System.out.println("Both expr are const");
 			if (relOptr.equals("==")) {
 				System.out.println("operator is ==");
-				if (leftExpr.equals(
-						rightExpr)) {
+				if (Float.parseFloat(leftExpr) ==
+						Float.parseFloat(rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
 					return true;
@@ -909,8 +909,8 @@ public class ECInterpreter implements KeyListener{
 					return false;
 				}
 			} else if (relOptr.equals("!=")) {
-				if (!leftExpr.equals(
-						rightExpr)) {
+				if (!(Float.parseFloat(leftExpr) ==
+						Float.parseFloat(rightExpr))) {
 					return true;
 				} else {
 					return false;
