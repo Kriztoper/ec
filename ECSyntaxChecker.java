@@ -37,18 +37,14 @@ public class ECSyntaxChecker {
 			"(else if\\p{Blank}+" + condition + "\\s+do\\s+"+ sentence +")*(else\\s+do\\s+" + sentence + ")?end\\s+)";
 	private static String stmt_block = "(" + conditional + "|" + iteration + "|" + comment + ")";
 	private static String paragraph = "((" + sentence + "|" + stmt_block + ")*)";
-	//private static String stmt_block = "(" + conditional + "|" + iteration + ")";
-	//private static String paragraph = "((" + sentence + "|" + stmt_block + ")*)";
 	
 	private static String main = "(^\\s*main\\s+do\\s+" + paragraph + "end\\s*$)";
 	private static String program  = main;
 
-	private String inputString;
 	private Pattern pattern;
 	private Matcher matcher;
 	
 	public String getMatchedPattern(String testString) {
-		//matcher = match(testString);
 		String matchedString = "oops";
 		while (match(testString)) {
 			matchedString += matcher.group(1);
@@ -63,86 +59,40 @@ public class ECSyntaxChecker {
 	}
 	
 	public boolean match(String stringPattern) {
-		inputString = stringPattern;
 		RegularExpressionUtils regularExpressionUtils =
 				new RegularExpressionUtils();
 		matcher = 
 				regularExpressionUtils.createMatcherWithTimeout(
 				stringPattern, pattern, 5000);
 		return matcher.find();
-		//return pattern.matcher(stringPattern).find();
 	}
 	
 	public ECSyntaxChecker(boolean isTest) {
-		//initVariables();
 		pattern = compile(program);
 	}
 
 	public boolean hasMatch(String testString) {
 		return match(testString);
 	}
-	
-	private void initVariables() {
-		/*conditional = "(if\\s+" + condition + "\\s+do\\s+" + 
-				"(" + sentence + "|" + stmt_block + ")*" + "end\\s+";
-		stmt_block = "(" + conditional + "|" + iteration + ")";
-		paragraph = "(" + sentence + "|" + stmt_block + ")*";
 		
-		main = "(^main\\s+do\\s+" + paragraph + "end$)";
-		cond = "(if\\s+@[a-z]\\s+(and|or|==|!=|<|>|<=|>=)\\s+@[a-z]\\s+do\\s+end\\s*)";
-		program  = main;*/
-	}
-	
 	public ECSyntaxChecker() {
-		//ECInterpreter ecInterpreter = new ECInterpreter();
-		//Scanner scanner = new Scanner(System.in);
-
 		pattern = compile(program);
-
-/*		Scanner scanner = new Scanner(System.in);
-		String input = "";
-		//initVariables();
-		pattern = compile(program);
-		
-		System.out.println(pattern.pattern());
-		while (!input.equals("e")) {
-			System.out.println("Enter a sentence (\"e to exit\"): ");
-			input = scanner.nextLine();
-			ecInterpreter.interpret(input);
-			matcher = match(input);
-			
-			if (matcher.find() == true)
-				System.out.println("yey!");
-			else
-				System.out.println("boo!");
-		}*/
 	}
-	
-	/*public static void main(String[] args) {
-		new ECSyntaxChecker();
-	}*/
-	
+
 	class RegularExpressionUtils {
 
-		// demonstrates behavior for regular expression running into catastrophic backtracking for given input
-		/*public static void main(String[] args) {
-			Matcher matcher = createMatcherWithTimeout(
-					"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "(x+x+)+y", 2000);
-			System.out.println(matcher.matches());
-		}*/
-
-		public /*static*/ Matcher createMatcherWithTimeout(String stringToMatch, String regularExpression, int timeoutMillis) {
+		public Matcher createMatcherWithTimeout(String stringToMatch, String regularExpression, int timeoutMillis) {
 			Pattern pattern = Pattern.compile(regularExpression);
 			return createMatcherWithTimeout(stringToMatch, pattern, timeoutMillis);
 		}
 
-		public /*static*/ Matcher createMatcherWithTimeout(String stringToMatch, Pattern regularExpressionPattern, int timeoutMillis) {
+		public Matcher createMatcherWithTimeout(String stringToMatch, Pattern regularExpressionPattern, int timeoutMillis) {
 			CharSequence charSequence = new TimeoutRegexCharSequence(stringToMatch, timeoutMillis, stringToMatch,
 					regularExpressionPattern.pattern());
 			return regularExpressionPattern.matcher(charSequence);
 		}
 
-		private /*static*/ class TimeoutRegexCharSequence implements CharSequence {
+		private class TimeoutRegexCharSequence implements CharSequence {
 
 			private final CharSequence inner;
 
@@ -179,18 +129,7 @@ public class ECSyntaxChecker {
 			@Override
 			public char charAt(int index) {
 				if (System.currentTimeMillis() > timeoutTime) {
-					//System.out.println(inner.charAt(index));
-					/*int i = 0;
-					while(i < matcher.groupCount()) {
-						System.out.println(matcher.group(i));
-						i++;
-					}*/
 					return 0;
-//					int indexOfLastMatch = indexOfLastMatch(pattern, inputString);
-//					System.out.println(inputString.charAt(indexOfLastMatch));
-//					throw new RuntimeException("Timeout occurred after " + 
-//							timeoutMillis + "ms while processing regular expression '" + 
-//							regularExpression + "' on input '" + stringToMatch + "'!");
 				}
 				return inner.charAt(index);
 			}

@@ -33,7 +33,6 @@ public class ECController {
             		String output = ecInterpreter.interpret(input, view.getResArea());
             	} else {
             	    JTextArea resArea = view.getResArea();
-            		// TODO: set syntax error font color to RED
             	    resArea.setText("********************\n"
             	    		+ "Syntax Error!\n"
             	    		+ "********************\n");

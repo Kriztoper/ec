@@ -32,10 +32,7 @@ public class ECInterpreter implements KeyListener{
 		
 		ECLexer ecLexer = new ECLexer();
 		String[] lexemes = ecLexer.tokenize(program);
-//		String[] words = program.split(" ");
-		//findVariables(lexemes);
 		String output = analyzeLexemes(0, lexemes);
-		//printVariable(lexemes);
 		return output;
 	}
 	
@@ -136,7 +133,6 @@ public class ECInterpreter implements KeyListener{
 						break;
 					}
 				}
-//					System.out.println("amma print");
 				if (isPuts) {
 					stringToPrint += '\n';
 				}
@@ -146,15 +142,7 @@ public class ECInterpreter implements KeyListener{
 				i += offsetToAdd;
 				continue;
 			} else if(lexemes[i].equals("scan") && isExec) {
-				//Scanner scan = new Scanner(System.in);
 				char letter = 0;
-				//console.setEditable(true);	
-				
-	
-				/*do {
-					consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
-				} while(consoleInput.equals(""));
-				console.append(consoleInput+"\n");*/
 				
 				String[] options = {"OK"};
 				JPanel panel = new JPanel();
@@ -168,27 +156,11 @@ public class ECInterpreter implements KeyListener{
 				}
 				System.out.println(consoleInput);
 
-				
-				//consoleInput = JOptionPane.showInputDialog(null, "Scanning: ");
 				if (null == consoleInput) {
 					consoleInput = "";
 				}
 				console.append(consoleInput+"\n");
-				//consoleInput = ECScanManager.scan(this, console);
 				
-				/*while(true) {
-					try {
-						letter = (char) System.in.read();
-						consoleInput += letter;
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					if (letter == 13)
-						break;
-				}*/
-				
-				//console.setEditable(false);
 				variables.put(lexemes[i+1], consoleInput);
 				
 				i++;
@@ -566,52 +538,36 @@ public class ECInterpreter implements KeyListener{
 					}
 				} else if (relOptr.equals("<")) {
 					if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
-//							getValueOfVariable(leftExpr).compareTo(
-//							getValueOfVariable(rightExpr)) == -1) {
 						return (hasNot) ? (false) : (true);
 					} else {
 						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("<=")) {
 					if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
-//							getValueOfVariable(leftExpr).compareTo(
-//							getValueOfVariable(rightExpr)) == -1 ||
-//							getValueOfVariable(leftExpr).compareTo(
-//									getValueOfVariable(rightExpr)) == 0) {
 						return (hasNot) ? (false) : (true);
 					} else {
 						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals(">")) {
 					if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
-//							getValueOfVariable(leftExpr).compareTo(
-//							getValueOfVariable(rightExpr)) == 1) {
 						return (hasNot) ? (false) : (true);
 					} else {
 						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals(">=")) {
 					if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
-//							getValueOfVariable(leftExpr).compareTo(
-//							getValueOfVariable(rightExpr)) == 1 ||
-//							getValueOfVariable(leftExpr).compareTo(
-//									getValueOfVariable(rightExpr)) == 0) {
 						return (hasNot) ? (false) : (true);
 					} else {
 						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("and")) {
 					if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
-//							!getValueOfVariable(leftExpr).isEmpty() && 
-//							!getValueOfVariable(rightExpr).isEmpty()) {
 						return (hasNot) ? (false) : (true);
 					} else {
 						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("or")) {
 					if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
-//							!getValueOfVariable(leftExpr).isEmpty() || 
-//							!getValueOfVariable(rightExpr).isEmpty()) {
 						return (hasNot) ? (false) : (true);
 					} else {
 						return (hasNot) ? (true) : (false);
@@ -645,52 +601,36 @@ public class ECInterpreter implements KeyListener{
 				}
 			} else if (relOptr.equals("<")) {
 				if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == -1) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == -1 ||
-//						getValueOfVariable(leftExpr).compareTo(
-//								getValueOfVariable(rightExpr)) == 0) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == 1) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == 1 ||
-//						getValueOfVariable(leftExpr).compareTo(
-//								getValueOfVariable(rightExpr)) == 0) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
-//						!getValueOfVariable(leftExpr).isEmpty() && 
-//						!getValueOfVariable(rightExpr).isEmpty()) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
-//						!getValueOfVariable(leftExpr).isEmpty() || 
-//						!getValueOfVariable(rightExpr).isEmpty()) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
@@ -723,52 +663,36 @@ public class ECInterpreter implements KeyListener{
 				}
 			} else if (relOptr.equals("<")) {
 				if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == -1) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == -1 ||
-//						getValueOfVariable(leftExpr).compareTo(
-//								getValueOfVariable(rightExpr)) == 0) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == 1) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == 1 ||
-//						getValueOfVariable(leftExpr).compareTo(
-//								getValueOfVariable(rightExpr)) == 0) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
-//						!getValueOfVariable(leftExpr).isEmpty() && 
-//						!getValueOfVariable(rightExpr).isEmpty()) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
-//						!getValueOfVariable(leftExpr).isEmpty() || 
-//						!getValueOfVariable(rightExpr).isEmpty()) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
@@ -942,52 +866,36 @@ public class ECInterpreter implements KeyListener{
 				}
 			} else if (relOptr.equals("<")) {
 				if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == -1) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == -1 ||
-//						getValueOfVariable(leftExpr).compareTo(
-//								getValueOfVariable(rightExpr)) == 0) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == 1) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
-//						getValueOfVariable(leftExpr).compareTo(
-//						getValueOfVariable(rightExpr)) == 1 ||
-//						getValueOfVariable(leftExpr).compareTo(
-//								getValueOfVariable(rightExpr)) == 0) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
-//						!getValueOfVariable(leftExpr).isEmpty() && 
-//						!getValueOfVariable(rightExpr).isEmpty()) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
-//						!getValueOfVariable(leftExpr).isEmpty() || 
-//						!getValueOfVariable(rightExpr).isEmpty()) {
 					return (hasNot) ? (false) : (true);
 				} else {
 					return (hasNot) ? (true) : (false);
@@ -1067,154 +975,9 @@ public class ECInterpreter implements KeyListener{
 		return (hasNot) ? (true) : (false);
 	}
 	
-/*	private boolean checkConstantsWithOr(String leftExpr, String rightExpr) {
-		if (leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0;
-		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) > 0 || Integer.parseInt(rightExpr) > 0;
-		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0;
-		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) > 0 || Integer.parseInt(rightExpr) > 0;
-		}
-		
-		return false;
-	}
-
-	private boolean checkConstantsWithAnd(String leftExpr, String rightExpr) {
-		if (leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0;
-		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) > 0 && Integer.parseInt(rightExpr) > 0;
-		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0;
-		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) > 0 && Integer.parseInt(rightExpr) > 0;
-		}
-		
-		return false;
-	}
-
-	private boolean checkConstantsIfLessThan(String leftExpr, String rightExpr) {
-		if (leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr);
-		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) < Integer.parseInt(rightExpr);
-		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) < Float.parseFloat(rightExpr);
-		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) < Integer.parseInt(rightExpr);
-		}
-		
-		return false;
-	}
-	
-	private boolean checkConstantsIfGreaterThan(String leftExpr, String rightExpr) {
-		if (leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr);
-		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) > Integer.parseInt(rightExpr);
-		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) > Float.parseFloat(rightExpr);
-		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) > Integer.parseInt(rightExpr);
-		}
-		
-		return false;
-	}
-
-	private boolean checkConstantsIfLessThanEquals(String leftExpr, String rightExpr) {
-		if (leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr);
-		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) <= Integer.parseInt(rightExpr);
-		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) <= Float.parseFloat(rightExpr);
-		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) <= Integer.parseInt(rightExpr);
-		}
-		
-		return false;
-	}
-	
-	private boolean checkConstantsIfGreaterThanEquals(String leftExpr, String rightExpr) {
-		if (leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr);
-		} else if (leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Float.parseFloat(leftExpr) >= Integer.parseInt(rightExpr);
-		} else if (!leftExpr.contains(".") && rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) >= Float.parseFloat(rightExpr);
-		} else if (!leftExpr.contains(".") && !rightExpr.contains(".")) {
-			return Integer.parseInt(leftExpr) >= Integer.parseInt(rightExpr);
-		}
-		
-		return false;
-	}
-*/
-	
 	public String getValueOfVariable(String nameOfVariable) {
 		return variables.get(nameOfVariable);
 	}
-	
-/*	public String[] tokenize(String program) {
-		ArrayList<String> lexemes = new ArrayList<String>();
-		String entity = "";
-		boolean hasStartCommentTag = false;
-		boolean hasStartStringTag = false;
-		
-//		System.out.println("Program code:\n" + program);
-		
-		for (int i = 0; i < program.length(); i++) {
-			char currentChar = program.charAt(i);
-//			System.out.println("current char = " + currentChar + 
-//					", isComment = " + hasStartCommentTag + ", " +
-//					"isString = " + hasStartStringTag);
-			if (Character.isWhitespace(currentChar) &&
-					!entity.equals("") && !hasStartCommentTag &&
-					!hasStartStringTag) {
-//				System.out.println(currentChar + " is not added");
-				lexemes.add(entity);
-				entity = "";
-			} else if (Character.isWhitespace(currentChar) &&
-					!entity.equals("") && !hasStartCommentTag &&
-					hasStartStringTag) {
-//				System.out.println(currentChar + " is added to entity");
-				entity += currentChar + "";
-			} else if (currentChar == '\'' && 
-					!hasStartStringTag && !hasStartCommentTag) {
-//				System.out.println(currentChar + " is encountered");
-				entity += currentChar + "";
-				hasStartStringTag = true;
-			} else if (currentChar == '\'' && 
-					hasStartStringTag && !hasStartCommentTag) {
-//				System.out.println(currentChar + " is encountered");
-				entity += currentChar + "";
-				hasStartStringTag = false;
-			} else if (currentChar == '/' && 
-					program.charAt(i+1) == '*' && 
-					!hasStartCommentTag && !hasStartStringTag) {
-				hasStartCommentTag = true;
-				i++;
-			} else if (currentChar == '*' && 
-					program.charAt(i+1) == '/' &&
-					hasStartCommentTag && !hasStartStringTag) {
-				hasStartCommentTag = false;
-				i++;
-			} else if (!Character.isWhitespace(currentChar) &&
-					!hasStartCommentTag) {
-//				System.out.println(currentChar + " is added to entity");
-				entity += currentChar + "";
-			}
-		}
-		lexemes.remove(0);
-		lexemes.remove(0);
-		
-		System.out.println("Tokenized lexemes\n" + lexemes);
-		
-		String[] lexemesArr = lexemes.toArray(new String[lexemes.size()]);
-
-		return lexemesArr;
-	}*/
 	
 	public void findVariables(String[] lexemes) {
 		for(int i = 0; i < lexemes.length - 2; i++) {
@@ -1224,16 +987,6 @@ public class ECInterpreter implements KeyListener{
 				addVariable(lexemes[i], lexemes[i+2]);
 			}
 		}
-		
-		/*for(int i = 0; i < lexemes.length - 4; i++) {
-			if(lexemes[i + 3].equals("+")){
-				if(variables.get(lexemes[i]).charAt(0) == '\'') {
-					variables.put(lexemes[i], 
-						(variables.get(
-							lexemes[i])+lexemes[i+4]).replace("''", ""));
-				}
-			}
-		}*/
 	}
 	
 	public float operateOnFloat(float operand1, float operand2, String operator) {
@@ -1308,18 +1061,6 @@ public class ECInterpreter implements KeyListener{
 			return false;
 	}
 	
-	class ECConditionalBlock {
-		private int startIndex;
-		private int endIndex;
-		private String[] lexemesBlock;
-		
-		public ECConditionalBlock(int startIndex, int endIndex, String[] lexemesBlock) {
-			this.startIndex = startIndex;
-			this.endIndex = endIndex;
-			this.lexemesBlock = lexemesBlock;
-		}
-	}
-
 	@Override
 	public void keyTyped(KeyEvent e) {
 		key = e.getKeyCode();
