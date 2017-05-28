@@ -56,7 +56,7 @@ public class ECInterpreter implements KeyListener{
 				String relOptr = lexemes[i+2]; // relational operator
 				String rightExpr = lexemes[i+3]; // right expression
 				
-				if (checkCondition(leftExpr, relOptr, rightExpr)) {
+				if (checkCondition(leftExpr, relOptr, rightExpr, false)) {
 					System.out.println("Condition is satisfied");
 					isExec = true;
 					condHasExec = true;
@@ -75,7 +75,7 @@ public class ECInterpreter implements KeyListener{
 				String relOptr = lexemes[i+3]; // relational operator
 				String rightExpr = lexemes[i+4]; // right expression
 				
-				if (!checkCondition(leftExpr, relOptr, rightExpr)) {
+				if (!checkCondition(leftExpr, relOptr, rightExpr, true)) {
 					System.out.println("Condition is satisfied");
 					isExec = true;
 					condHasExec = true;
@@ -200,7 +200,7 @@ public class ECInterpreter implements KeyListener{
 					i++;
 				}
 				isLoop = false;
-			} else if(lexemes[i].equals("while") && lexemes[i+4].equals("do")) {
+			} else if(lexemes[i].equals("while") && (lexemes[i+4].equals("do") || lexemes[i+5].equals("do"))) {
 				isLoop = true;
 				whileLoop(i, lexemes);
 				
@@ -234,9 +234,16 @@ public class ECInterpreter implements KeyListener{
 
 	public void whileLoop(int i, String[] lexemes) {
 		int j=i;
+
+		boolean hasNot = false;
+		int notIndex = 0;
+		if (lexemes[j+1].equals("not")) {
+			hasNot = true;
+			notIndex++;
+		}
 		
-		while(checkCondition(lexemes[j+1], lexemes[j+2], lexemes[j+3])) {
-			analyzeLexemes(j+5, lexemes);
+		while(checkCondition(lexemes[j+1+notIndex], lexemes[j+2+notIndex], lexemes[j+3+notIndex], hasNot) ) {
+			analyzeLexemes(j+5+notIndex, lexemes);
 		};
 	}
 	
@@ -245,9 +252,20 @@ public class ECInterpreter implements KeyListener{
 		
 		variables.put(lexemes[j+1], lexemes[j+3]);
 		
-		while(checkCondition(lexemes[j+5], lexemes[j+6], lexemes[j+7])) {
-			analyzeLexemes(j+15, lexemes);
-			addVar(j+9, lexemes);
+		boolean hasNot = false;
+		int notIndex = 0;
+		if (lexemes[j+5].equals("not")) {
+			hasNot = true;
+			notIndex++;
+		}
+			
+		while(checkCondition(lexemes[j+5+notIndex], lexemes[j+6+notIndex], lexemes[j+7+notIndex], hasNot)) {
+			if (!lexemes[j + 10 + notIndex].equals("=")) {
+				analyzeLexemes(j+13+notIndex, lexemes);
+			} else {
+				analyzeLexemes(j+15+notIndex, lexemes);
+				addVar(j+9+notIndex, lexemes);
+			}
 		};
 	}
 	
@@ -256,20 +274,26 @@ public class ECInterpreter implements KeyListener{
 		String leftExpr = "";
 		String operator = "";
 		String rightExpr = "";
+		boolean hasNot = false;
+		int notIndex = 0;
 		
 		// get the while condition
 		for (int k = j + 1; k < lexemes.length; k++) {
 			if (lexemes[k].equals("while")){
-				leftExpr = lexemes[k+1];
-				operator = lexemes[k+2];
-				rightExpr = lexemes[k+3];
+				if (lexemes[k+1].equals("not")) {
+					hasNot = true;
+					notIndex++;
+				}
+				leftExpr = lexemes[k+1+notIndex];
+				operator = lexemes[k+2+notIndex];
+				rightExpr = lexemes[k+3+notIndex];
 				break;
 			}
 		}
-				
+		
 		do {
 			analyzeLexemes(j+1, lexemes);
-		} while(checkCondition(leftExpr, operator, rightExpr));
+		} while(checkCondition(leftExpr, operator, rightExpr, hasNot));
 	}
 	
 	public boolean isString(String text) {
@@ -414,6 +438,7 @@ public class ECInterpreter implements KeyListener{
 						variables.put(lexemes[i], lexemes[i+2]);
 					}
 				}
+				System.out.println(lexemes[i] + " = " + variables.get(lexemes[i]));
 			}
 		}
 	}
@@ -432,7 +457,7 @@ public class ECInterpreter implements KeyListener{
 	    return str;
 	}
 	
-	public boolean checkCondition(String leftExpr, String relOptr, String rightExpr) {
+	public boolean checkCondition(String leftExpr, String relOptr, String rightExpr, boolean hasNot) {
 		if (leftExpr.startsWith("@") && rightExpr.startsWith("@")) {
 			System.out.println("Both left and right expressions are "
 					+ "variables");
@@ -452,64 +477,64 @@ public class ECInterpreter implements KeyListener{
 							rightExpr)) {
 						System.out.println("Both" + 
 								" are equal");
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
 						System.out.println("Both" + 
 								" are not equal");
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("!=")) {
 					if (!leftExpr.equals(
 							rightExpr)) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("<")) {
 					if (leftExpr.compareTo(
 							rightExpr) == -1) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("<=")) {
 					if (leftExpr.compareTo(
 							rightExpr) == -1 ||
 							leftExpr.compareTo(
 									rightExpr) == 0) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals(">")) {
 					if (leftExpr.compareTo(
 							rightExpr) == 1) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals(">=")) {
 					if (leftExpr.compareTo(
 							rightExpr) == 1 ||
 							leftExpr.compareTo(
 									rightExpr) == 0) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("and")) {
 					if (!leftExpr.isEmpty() && 
 							!rightExpr.isEmpty()) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("or")) {
 					if (!leftExpr.isEmpty() || 
 							!rightExpr.isEmpty()) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				}
 			} else if (!isString(getValueOfVariable(leftExpr)) &&
@@ -526,26 +551,26 @@ public class ECInterpreter implements KeyListener{
 							Float.parseFloat(rightExpr)) {
 						System.out.println("Both" + 
 								" are equal");
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
 						System.out.println("Both" + 
 								" are not equal");
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("!=")) {
 					if (!(Float.parseFloat(leftExpr) ==
 							Float.parseFloat(rightExpr))) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("<")) {
 					if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
 //							getValueOfVariable(leftExpr).compareTo(
 //							getValueOfVariable(rightExpr)) == -1) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("<=")) {
 					if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
@@ -553,17 +578,17 @@ public class ECInterpreter implements KeyListener{
 //							getValueOfVariable(rightExpr)) == -1 ||
 //							getValueOfVariable(leftExpr).compareTo(
 //									getValueOfVariable(rightExpr)) == 0) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals(">")) {
 					if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
 //							getValueOfVariable(leftExpr).compareTo(
 //							getValueOfVariable(rightExpr)) == 1) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals(">=")) {
 					if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
@@ -571,25 +596,25 @@ public class ECInterpreter implements KeyListener{
 //							getValueOfVariable(rightExpr)) == 1 ||
 //							getValueOfVariable(leftExpr).compareTo(
 //									getValueOfVariable(rightExpr)) == 0) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("and")) {
 					if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
 //							!getValueOfVariable(leftExpr).isEmpty() && 
 //							!getValueOfVariable(rightExpr).isEmpty()) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				} else if (relOptr.equals("or")) {
 					if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
 //							!getValueOfVariable(leftExpr).isEmpty() || 
 //							!getValueOfVariable(rightExpr).isEmpty()) {
-						return true;
+						return (hasNot) ? (false) : (true);
 					} else {
-						return false;
+						return (hasNot) ? (true) : (false);
 					}
 				}
 			}
@@ -605,26 +630,26 @@ public class ECInterpreter implements KeyListener{
 						Float.parseFloat(rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
 					System.out.println("Both" + 
 							" are not equal");
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("!=")) {
 				if (!(Float.parseFloat(leftExpr) ==
 						Float.parseFloat(rightExpr))) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<")) {
 				if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
 //						getValueOfVariable(leftExpr).compareTo(
 //						getValueOfVariable(rightExpr)) == -1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
@@ -632,17 +657,17 @@ public class ECInterpreter implements KeyListener{
 //						getValueOfVariable(rightExpr)) == -1 ||
 //						getValueOfVariable(leftExpr).compareTo(
 //								getValueOfVariable(rightExpr)) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
 //						getValueOfVariable(leftExpr).compareTo(
 //						getValueOfVariable(rightExpr)) == 1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
@@ -650,25 +675,25 @@ public class ECInterpreter implements KeyListener{
 //						getValueOfVariable(rightExpr)) == 1 ||
 //						getValueOfVariable(leftExpr).compareTo(
 //								getValueOfVariable(rightExpr)) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
 //						!getValueOfVariable(leftExpr).isEmpty() && 
 //						!getValueOfVariable(rightExpr).isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
 //						!getValueOfVariable(leftExpr).isEmpty() || 
 //						!getValueOfVariable(rightExpr).isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			}
 		} else if (!leftExpr.startsWith("@") && rightExpr.startsWith("@") &&
@@ -683,26 +708,26 @@ public class ECInterpreter implements KeyListener{
 						Float.parseFloat(rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
 					System.out.println("Both" + 
 							" are not equal");
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("!=")) {
 				if (!(Float.parseFloat(leftExpr) ==
 						Float.parseFloat(rightExpr))) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<")) {
 				if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
 //						getValueOfVariable(leftExpr).compareTo(
 //						getValueOfVariable(rightExpr)) == -1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
@@ -710,17 +735,17 @@ public class ECInterpreter implements KeyListener{
 //						getValueOfVariable(rightExpr)) == -1 ||
 //						getValueOfVariable(leftExpr).compareTo(
 //								getValueOfVariable(rightExpr)) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
 //						getValueOfVariable(leftExpr).compareTo(
 //						getValueOfVariable(rightExpr)) == 1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
@@ -728,25 +753,25 @@ public class ECInterpreter implements KeyListener{
 //						getValueOfVariable(rightExpr)) == 1 ||
 //						getValueOfVariable(leftExpr).compareTo(
 //								getValueOfVariable(rightExpr)) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
 //						!getValueOfVariable(leftExpr).isEmpty() && 
 //						!getValueOfVariable(rightExpr).isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
 //						!getValueOfVariable(leftExpr).isEmpty() || 
 //						!getValueOfVariable(rightExpr).isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			}
 		} else if (leftExpr.startsWith("@") && !rightExpr.startsWith("@") &&
@@ -761,64 +786,64 @@ public class ECInterpreter implements KeyListener{
 						rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
 					System.out.println("Both" + 
 							" are not equal");
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("!=")) {
 				if (!leftExpr.equals(
 						rightExpr)) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<")) {
 				if (leftExpr.compareTo(
 						rightExpr) == -1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (leftExpr.compareTo(
 						rightExpr) == -1 ||
 						leftExpr.compareTo(
 								rightExpr) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (leftExpr.compareTo(
 						rightExpr) == 1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (leftExpr.compareTo(
 						rightExpr) == 1 ||
 						leftExpr.compareTo(
 								rightExpr) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (!leftExpr.isEmpty() && 
 						!rightExpr.isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (!leftExpr.isEmpty() || 
 						!rightExpr.isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (false) : (false);
 				}
 			}
 		} else if (!leftExpr.startsWith("@") && rightExpr.startsWith("@") &&
@@ -833,64 +858,64 @@ public class ECInterpreter implements KeyListener{
 						rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
 					System.out.println("Both" + 
 							" are not equal");
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("!=")) {
 				if (!leftExpr.equals(
 						rightExpr)) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<")) {
 				if (leftExpr.compareTo(
 						rightExpr) == -1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (leftExpr.compareTo(
 						rightExpr) == -1 ||
 						leftExpr.compareTo(
 								rightExpr) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (leftExpr.compareTo(
 						rightExpr) == 1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (leftExpr.compareTo(
 						rightExpr) == 1 ||
 						leftExpr.compareTo(
 								rightExpr) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (!leftExpr.isEmpty() && 
 						!rightExpr.isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (!leftExpr.isEmpty() || 
 						!rightExpr.isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			}
 		} else if (!leftExpr.startsWith("@") && !rightExpr.startsWith("@") &&
@@ -902,26 +927,26 @@ public class ECInterpreter implements KeyListener{
 						Float.parseFloat(rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
 					System.out.println("Both" + 
 							" are not equal");
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("!=")) {
 				if (!(Float.parseFloat(leftExpr) ==
 						Float.parseFloat(rightExpr))) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<")) {
 				if (Float.parseFloat(leftExpr) < Float.parseFloat(rightExpr)) {
 //						getValueOfVariable(leftExpr).compareTo(
 //						getValueOfVariable(rightExpr)) == -1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (Float.parseFloat(leftExpr) <= Float.parseFloat(rightExpr)) {
@@ -929,17 +954,17 @@ public class ECInterpreter implements KeyListener{
 //						getValueOfVariable(rightExpr)) == -1 ||
 //						getValueOfVariable(leftExpr).compareTo(
 //								getValueOfVariable(rightExpr)) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (Float.parseFloat(leftExpr) > Float.parseFloat(rightExpr)) {
 //						getValueOfVariable(leftExpr).compareTo(
 //						getValueOfVariable(rightExpr)) == 1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (Float.parseFloat(leftExpr) >= Float.parseFloat(rightExpr)) {
@@ -947,25 +972,25 @@ public class ECInterpreter implements KeyListener{
 //						getValueOfVariable(rightExpr)) == 1 ||
 //						getValueOfVariable(leftExpr).compareTo(
 //								getValueOfVariable(rightExpr)) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (Float.parseFloat(leftExpr) > 0 && Float.parseFloat(rightExpr) > 0) {
 //						!getValueOfVariable(leftExpr).isEmpty() && 
 //						!getValueOfVariable(rightExpr).isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (Float.parseFloat(leftExpr) > 0 || Float.parseFloat(rightExpr) > 0) {
 //						!getValueOfVariable(leftExpr).isEmpty() || 
 //						!getValueOfVariable(rightExpr).isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			}
 		} else if (!leftExpr.startsWith("@") && !rightExpr.startsWith("@") &&
@@ -977,69 +1002,69 @@ public class ECInterpreter implements KeyListener{
 						rightExpr)) {
 					System.out.println("Both" + 
 							" are equal");
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
 					System.out.println("Both" + 
 							" are not equal");
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("!=")) {
 				if (!leftExpr.equals(
 						rightExpr)) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<")) {
 				if (leftExpr.compareTo(
 						rightExpr) == -1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("<=")) {
 				if (leftExpr.compareTo(
 						rightExpr) == -1 ||
 						leftExpr.compareTo(
 								rightExpr) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">")) {
 				if (leftExpr.compareTo(
 						rightExpr) == 1) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals(">=")) {
 				if (leftExpr.compareTo(
 						rightExpr) == 1 ||
 						leftExpr.compareTo(
 								rightExpr) == 0) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (false) : (false);
 				}
 			} else if (relOptr.equals("and")) {
 				if (!leftExpr.isEmpty() && 
 						!rightExpr.isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			} else if (relOptr.equals("or")) {
 				if (!leftExpr.isEmpty() || 
 						!rightExpr.isEmpty()) {
-					return true;
+					return (hasNot) ? (false) : (true);
 				} else {
-					return false;
+					return (hasNot) ? (true) : (false);
 				}
 			}
 		}
 		
-		return false;
+		return (hasNot) ? (true) : (false);
 	}
 	
 /*	private boolean checkConstantsWithOr(String leftExpr, String rightExpr) {
